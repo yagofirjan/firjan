@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "formulario-svp-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/formularioSvp/FormularioSvpWebPart.js",
+          "manifest": "./src/webparts/formularioSvp/FormularioSvpWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "FormularioSvpWebPartStrings": "lib/webparts/formularioSvp/loc/{locale}.js"
+  }
+}
