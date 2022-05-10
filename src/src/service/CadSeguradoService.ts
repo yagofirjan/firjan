@@ -78,6 +78,34 @@ export class CadSeguradoService {
 
 
     /**
+    * Retorna um unico item de lista consultando po ID
+    * 
+    * 
+    * @static
+    * @param {string}    missionId - ID of the Grupo to retrieve.
+    * @returns {IGrupo}
+    * @memberof GrupoService
+    */
+    public getCadSegur(user: any): Promise<ICadSeguradoListItem> {
+        let promise: Promise<ICadSeguradoListItem> = new Promise<ICadSeguradoListItem>((resolve, reject) => {
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'&$orderby=ID desc&$top=1`,
+                SPHttpClient.configurations.v1,
+                this._spHttpOptions.getFullMetadata
+            ) // get response & parse body as JSON
+                .then((response: SPHttpClientResponse): Promise<ICadSeguradoListItem> => {
+                    return response.json();
+                }) // get parsed response as array, and return
+                .then((response: ICadSeguradoListItem) => {
+                    resolve(response);
+                })
+                .catch((error: any) => {
+                    reject(error);
+                });
+        });
+        return promise;
+    }
+
+    /**
      * Retorna todos os itens de uma lista 
      *
      * 
@@ -87,7 +115,7 @@ export class CadSeguradoService {
     public getCadSegurados(user: string): Promise<ICadSeguradoListItem[]> {
         let promise: Promise<ICadSeguradoListItem[]> = new Promise<ICadSeguradoListItem[]>((resolve, reject) => {
 
-            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'`,
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'`,/**modificar para trazer se tiver alguma linha com status  aprovado ou pendente se for rejeitado deve trazer o formulario */
 
                 SPHttpClient.configurations.v1,
                 this._spHttpOptions.getNoMetadata
@@ -205,6 +233,7 @@ export class CadSeguradoService {
     }
 
 
+   
 
 
 

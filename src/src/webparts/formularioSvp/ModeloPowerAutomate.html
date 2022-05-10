@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        label {
+            margin-bottom: 0px;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            padding: 0 10px;
+
+        }
+
+        .paper {
+            padding: 5px;
+            background-color: #ffff;
+            box-shadow: 0 0 1em black;
+            color: black;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 0px;
+        }
+
+        .form-header-logo {
+            text-align: center;
+        }
+
+        .form-header-title {
+            text-align: center;
+            width: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-controler {
+            display: flex;
+            margin: 10px 0 10px 0;
+            width: 100%;
+        }
+
+        .form-row {
+            /* font-size: 17px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+            margin: 10px;
+        }
+
+        fieldset {
+            margin: 15px 0 10px 0;
+            border: solid 2px #ccc;
+            padding-bottom: 5px
+        }
+
+
+        table tr {
+            padding: 0 5px 0 5px;
+        }
+
+        .frag {
+            margin: 0 7px 0 7px;
+            width: 100%;
+        }
+
+        .frag input {
+            width: 100%;
+        }
+
+        .form-control[readonly] {
+            background-color: #ffffff;
+            opacity: 1;
+        }
+
+        .Htitle {
+            font-size: 22px;
+        }
+
+        .myUl {
+            margin-right: 10px;
+            margin-left: 15px;
+            list-style: inherit;
+            font-size: 12px;
+        }
+
+        .norm {
+            width: 50%;
+        }
+
+        .mb-solid {
+            border: solid 1px #cecece;
+            padding: 4px;
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .ml-label {
+            font-weight: 600;
+            font-size: 14px;
+            background: #ffff;
+            margin-top: -9px;
+            position: absolute;
+            padding: 6px;
+            margin-left: 5px;
+        }
+
+        .controler-text {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="paper">
+        <table>
+            <tbody>
+                <tr>
+                    <td><img src="../SiteAssets/logo-Firjan.png" alt="Logo"></td>
+                    <td>
+                        <h1 class="Htitle">Termo de Nomeação de Beneficiários Seguro de Vida de Pessoas</h1>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <form id="FormularioSVP" name="FormularioSVP">
+            <!-- Segurado -->
+            <fieldset>
+                <label class="ml-label">Dados do Segurado</label>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="norm">
+                                <label for="inputName">Nome completo</label>
+                                <div class="mb-solid">
+                                    @{triggerOutputs()?['body/Nome']}
+                                </div>
+                            </td>
+                            <td class="norm">
+                                <label for="inputCpf">CPF</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/CPF']}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="norm">
+                                <label for="inputData">Data de nascimento</label>
+                                <div class="mb-solid">@{outputs('Atualizar_item')?['body/DataNascimento']}</div>
+                            </td>
+                            <td class="norm">
+                                <label for="inputMatricula">Matrícula</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/Matricula']}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td id="esp1">
+                                <label for="inputEmpresa">Empresa</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/Empresa']}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="esp">
+                                <label for="inputEstabelecimento">Estabelecimento</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/Estabelecimento']}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="esp2">
+                                <label for="inputLotacao">Lotação</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/Lotacao']}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </fieldset>
+
+            <!-- Termo -->
+            <div class="controler-text">
+                <b>Na qualidade de segurado da apólice contratada pela Entidade para seus empregados, nomeio por
+                    este termo que vai por mim assinado, como meus beneficiários, as pessoas abaixo
+                    indicadas:</b>
+            </div>
+            <!-- beneficiarios -->
+            <fieldset>
+                <label class="ml-label">Dados dos Beneficiários</label>
+                <table>
+                    <tbody>
+
+                        @{variables('Benef')}
+                    </tbody>
+                </table>
+            </fieldset>
+            <!-- Avisos -->
+            <fieldset>
+                <label class="ml-label">Dados Importantes</label>
+                <ul class=" myUl">
+                    <li>Os Titulares do seguro deverão manifestar livremente sua vontade na indicação de seus
+                        beneficiários, podendo indicar qualquer pessoa como beneficiário, e não somente os
+                        dependentes
+                        legais;</li>
+                    <li>Para segurado maior de 16 anos e menor de 18 anos, a assinatura deverá ser em conjunto
+                        com
+                        seu
+                        representante legal, e se menor de 16 anos, a assinatura deverá ser somente do seu
+                        representante
+                        legal. Para ambos os casos será necessário o envio de uma cópia do RG e CPF do
+                        representante
+                        legal, junto com a certidão de nascimento e/ou documento legal que comprove a
+                        responsabilidade
+                        sobre o menor</li>
+                    <li>Caso o segurado se encontre impossibilitado, ou não saiba assinar, deverá ser colhida
+                        sua
+                        impressão digital e a assinatura de um representante (assinatura a rogo). Também deverá
+                        ser
+                        encaminhada cópia de um documento de identificação que sirva de comprovação da
+                        assinatura do
+                        representante.</li>
+                    <li>Deverão ser preenchidos todos os campos do formulário, inclusive o percentual de
+                        participação de
+                        cada beneficiário;</li>
+                    <li>No preenchimento incorreto ou incompleto do formulário, este não acatado e serão
+                        mantidos os
+                        beneficiários indicados anteriormente. Caso ainda não tenham sido indicados, os
+                        beneficiários
+                        serão definidos pela legislação vigente na data do evento;</li>
+                    <li>Na falta de indicação de beneficiário (s), a indenização do seguro será para de acordo
+                        com a
+                        legislação vigente
+                    </li>
+                    <li>Em caso de óbito a família deverá informar à GRB - Gerência de Remuneração e Benefícios.
+                    </li>
+                </ul>
+            </fieldset>
+            <!-- Assinatura -->
+            <fieldset>
+                <label class="ml-label">Assinatura</label>
+                <table>
+
+                    <img src="" alt="" srcset="">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="inputEstado">Estado</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/Estado']}</div>
+
+                            </td>
+                            <td>
+                                <label for="inputDataAss">Data</label>
+                                <div class="mb-solid">@{triggerOutputs()?['body/DataAssinatura']}</div>
+                            </td>
+                            <td>
+                                <label for="inputAss">Assinatura</label>
+                                <div class="mb-solid">@{outputs('Atualizar_item')?['body/Assinatura']}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+    </div>
+    </div>
+</body>
+
+</html>

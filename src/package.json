@@ -9,6 +9,7 @@
     "test": "gulp test"
   },
   "dependencies": {
+    "@azure/msal": "^1.4.5",
     "@microsoft/sp-core-library": "1.12.1",
     "@microsoft/sp-lodash-subset": "1.12.1",
     "@microsoft/sp-office-ui-fabric-core": "1.12.1",

@@ -12,13 +12,8 @@ export interface ICadSeguradoListItem {
     DataAssinatura:string;
     Status:string;
     Author: string;
-    AttachmentFiles:{
-        Title: string;
-        id: number;
-        ServerRelativeUrl:string;
-        Attachments: boolean;
-    };
+    AttachmentFiles: any;
     Assinatura:string;
-  
+   
 
     }
