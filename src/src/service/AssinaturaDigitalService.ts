@@ -82,7 +82,7 @@ export class AssinaturaDigitalService {
      * @returns {IAssinaturaDigital[]}      Collection of missions.
      * @memberof AssinaturaDigitalService
      */
-    public getAssinaturas(UserName:string, UserEmail:string): Promise<IAssinaturaDigitalListItem[]> {
+    public getAssinaturas(UserName: string, UserEmail: string): Promise<IAssinaturaDigitalListItem[]> {
         let promise: Promise<IAssinaturaDigitalListItem[]> = new Promise<IAssinaturaDigitalListItem[]>((resolve, reject) => {
 
             this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?&$filter=(NomeUsuario eq '${UserName}')and(EmailUsuario eq '${UserEmail}')${SELECT_QUERY}&$orderby=ID desc&$top=1`,
@@ -123,6 +123,34 @@ export class AssinaturaDigitalService {
                 })
                 .then((response: { ListItemEntityTypeFullName: string }): void => {
                     resolve(response.ListItemEntityTypeFullName);
+                })
+                .catch((error: any) => {
+                    reject(error);
+                });
+        });
+        return promise;
+    }
+
+
+    /**
+      * Retorna o ultimo item criado na lista
+      *
+      * 
+      * @static
+      * @returns {ICadSegurado}
+      * @memberof CadSeguradoService
+      */
+    public getLastAssinatura(): Promise<IAssinaturaDigitalListItem> {
+        let promise: Promise<IAssinaturaDigitalListItem> = new Promise<IAssinaturaDigitalListItem>((resolve, reject) => {
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$orderby=ID desc&$top=1`,
+                SPHttpClient.configurations.v1,
+                this._spHttpOptions.getFullMetadata
+            ) // get response & parse body as JSON
+                .then((response: SPHttpClientResponse): Promise<any> => {
+                    return response.json();
+                }) // get parsed response as array, and return
+                .then((response: any) => {
+                    resolve(response.value[0]);
                 })
                 .catch((error: any) => {
                     reject(error);
