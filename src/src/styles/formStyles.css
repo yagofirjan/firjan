@@ -1,0 +1,136 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
+
+label {
+    margin-bottom: 0px;
+}
+
+.paper {
+    padding: 25px;
+    background-color: #ffff;
+    box-shadow: 0 0 1em black;
+    color: black;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 0px;
+}
+
+.form-header-logo {
+    text-align: center;
+}
+
+.form-header-title {
+    text-align: center;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-controler {
+    display: flex;
+    margin: 10px 0 10px 0;
+    width: 100%;
+}
+
+.form-row {
+    /* font-size: 17px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    margin: 10px;
+}
+
+fieldset {
+    margin: 10px 0 10px 0;
+    border: solid 2px #ccc;
+}
+
+legend {
+    font-weight: 600;
+    font-size: 16px;
+    width: auto;
+    padding-inline-start: 4px;
+    padding-inline-end: 4px;
+    margin-left: 10px;
+    margin-bottom: 0px;
+}
+
+.frag {
+    margin: 0 7px 0 7px;
+    width: 100%;
+}
+
+.frag input {
+    width: 100%;
+}
+
+input[type=text],
+select {
+    width: 100%;
+    padding: 12px 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-control[readonly] {
+    background-color: #ffffff;
+    opacity: 1;
+}
+
+.Htitle {
+    font-size: 24px;
+}
+
+body::-webkit-scrollbar {
+    width: 10px
+}
+
+.BtnAss {
+    margin-top: 8px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #003bd1;
+    border-color: #003bd1;
+}
+
+.myUl {
+    margin-right: 20px;
+    list-style: inherit;
+}
+
+.table td,
+.table th {
+    padding: 0.75rem;
+    vertical-align: inherit;
+    border-top: 1px solid #dee2e6;
+}
+
+.EditBtn,
+.VizuBtn {
+    background-color: transparent;
+    border-color: transparent;
+    color: #003bd1;
+}
+
+.table .thead-blue th {
+    color: #fff;
+    background-color: #003bd1;
+    border-color: #003bd1;
+}
+
+.modal-header {
+    border-bottom: 0px;
+}
+
+.modal-footer {
+    border-top: 0px;
+}

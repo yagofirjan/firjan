@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "forms-firjan-client-side-solution",
+    "id": "fbf52e76-55ae-4216-8be4-498fe8883428", 
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [{
+      "resource": "app_DEV_Firjan.RecursosHumanos.API",
+      "scope": "api://09a83055-95fc-4dfc-adc5-64fb8a6d9228/Colaborador.Read.All"
+    }],
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": ""
+    }
+  },
+  "paths": {
+    "zippedPackage": "solution/forms-firjan-formulario-SVP.sppkg"
+  }
+}
