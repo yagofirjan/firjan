@@ -163,7 +163,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let htmlbenf = '';
     addbenf.addEventListener('click', (e) => {
      
-      cont = cont + 1;
+      cont = cont + 90;
       htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
       newbenf.insertAdjacentHTML('beforeend', htmlbenf);
       this.LoadCamposForm();
@@ -186,6 +186,38 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         }
       }
     });
+
+    
+    let button = document.querySelectorAll('.div_divPai_');
+    button.forEach(item => {
+      item.addEventListener('click', event => {
+        let idItem = item.id;
+        let CurrentId: number = parseInt(idItem.split('_')[2]);
+        document.getElementById('divPai_'+CurrentId+'').remove();
+      });
+    });
+
+    let outros = document.querySelectorAll('.dropdonw');
+    outros.forEach(item => {
+      item.addEventListener('change', event => {
+        var id = item.id;
+        var idValue = (<HTMLInputElement>document.getElementById(id)).value;
+        var newId = id.split('Benf')[1];
+        var elemento_pai = document.getElementById('inputParentescoBenfSelect'+newId+'');
+        if(idValue == "Outros"){
+          document.getElementById(id).remove();
+          var neww = document.createElement('input');
+          neww.type = 'text';
+          neww.placeholder = 'Informe o Grau.';
+          neww.classList.add('form-control-sm');
+          neww.classList.add('form-control');
+          neww.classList.add('form-control-sm');
+          neww.id = id ;
+          elemento_pai.appendChild(neww);
+        }
+      });
+    });
+
 
     var DataArrumada = this.func.FormtDataAssinatura();
     let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
