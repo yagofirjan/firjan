@@ -187,7 +187,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       }
     });
 
-    
     let button = document.querySelectorAll('.div_divPai_');
     button.forEach(item => {
       item.addEventListener('click', event => {
@@ -358,12 +357,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
-  //FORM
-
-
-  
-
-  
   private ValidaCamposForm() {
 
     //SEGURADO
