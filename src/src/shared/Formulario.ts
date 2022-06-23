@@ -1,5 +1,6 @@
 import 'bootstrap';
 import { SPHttpClient } from '@microsoft/sp-http';
+import styles from '../webparts/formularioSvp/FormularioSvpWebPart.module.scss';
 require('../../node_modules/bootstrap/dist/css/bootstrap.min.css');
 
 export class FormularioComponent {
@@ -166,7 +167,14 @@ export class FormularioComponent {
                       </div>
                   </div>
               </fieldset>
-              <buttom type="button" class="btn btn-primary" id="btnSalvar">Concluir e Enviar</buttom>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary" id="btnCancelar" style="background-color: #393230 !important; border-color: #393230;">Voltar</button>
+                    </div>
+                    <div class="col-md-6">
+                        <buttom type="button" class="btn btn-primary" id="btnSalvar" style="float: right;">Concluir e Enviar</buttom>
+                    </div>
+                </div>
           </form>
           </div>
        </div>
@@ -296,7 +304,7 @@ export class FormularioComponent {
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 7) {
-            depend += `<input type="text" class="GrauParentesco form-control form-control-sm" id="inputGrauParentesco${DataDepend.codDependente}">`;
+            depend += `<input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.codDependente}">`;
         }
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.codDependente}">

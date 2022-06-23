@@ -164,6 +164,33 @@ export class CadSeguradoService {
 
 
     /**
+      * Retorna o ultimo item criado na lista de um usuário
+      *
+      * 
+      * @static
+      * @returns {ICadSegurado}
+      * @memberof CadSeguradoService
+      */
+     public getLastBySegurado(user: string): Promise<ICadSeguradoListItem> {
+        let promise: Promise<ICadSeguradoListItem> = new Promise<ICadSeguradoListItem>((resolve, reject) => {
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'`,
+                SPHttpClient.configurations.v1,
+                this._spHttpOptions.getFullMetadata
+            ) // get response & parse body as JSON
+                .then((response: SPHttpClientResponse): Promise<any> => {
+                    return response.json();
+                }) // get parsed response as array, and return
+                .then((response: any) => {
+                    resolve(response.value[0]);
+                })
+                .catch((error: any) => {
+                    reject(error);
+                });
+        });
+        return promise;
+    }
+
+    /**
      * Retrieve the entity type as a string for the list
      *
      * 
