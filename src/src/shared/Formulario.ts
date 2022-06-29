@@ -304,7 +304,7 @@ export class FormularioComponent {
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 7) {
-            depend += `<input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.codDependente}">`;
+            depend += `<input type="text" class="GrauParentesco form-control form-control-sm" placeholder="Informe o Grau." id="inputParentescoBenf${DataDepend.codDependente}">`;
         }
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.codDependente}">

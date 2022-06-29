@@ -36,8 +36,8 @@ export class TableFormularioComponent {
                         <div id="ConteudoModalEdicao"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
-                        <button type="button" class="btn btn-primary" id="SalvarAlteracoes">Salvar Alterações</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #393230 !important; border-color: #393230;">Voltar</button>
+                        <button type="button" class="btn btn-primary" id="SalvarAlteracoes" style="float: right;">Salvar Alterações</button>
                     </div>
                 </div>
             </div>
@@ -46,192 +46,6 @@ export class TableFormularioComponent {
 
 
     }
-
-
-    public NhtmlTablePopuladoReprovado(AuxItem: any, DataDepend: any, url: string) {
-        let arr: any = AuxItem.AttachmentFiles;
-        let htmlTable: string = "";
-        let depend: string = "";
-        let anexo: string = "";
-
-        if (AuxItem.Ramal == null || AuxItem.Ramal == "null")
-            AuxItem.Ramal = "";
-
-        for (var i = 0; i < DataDepend.length; i++) {
-            if(DataDepend[i].grauDependencia == 1){
-                if(DataDepend[i].nomeDependente == AuxItem.NomeDependente){
-                    depend += `<option value = "${DataDepend[i].nomeDependente}" selected>${DataDepend[i].nomeDependente}</option>`;
-                }else{
-                    depend += `<option value = "${DataDepend[i].nomeDependente}">${DataDepend[i].nomeDependente}</option>`;
-                }
-            }
-        }
-
-        for (var s = 0; s < arr.length; s++) {
-            var nome = arr[s].ServerRelativeUrl.split("Attachments")[1].split("/")[2];
-            anexo += `<div class="myli" style="margin-right: 5px;padding-right: 12px;">
-                      <a href="javascript:void(0)" onclick="window.open('${url}${arr[s].ServerRelativeUrl}');">${nome}
-                      </a>
-                      </div>`;
-        }
-
-        htmlTable = `<div class="paper">
-        <div class="form-header row justify-content-between">
-            <div class="form-header-logo col-lg-2 col-md-12">
-                <img src="../SiteAssets/logo-Firjan.png" alt="Logo">
-            </div>
-            <div class="form-header-title col-lg-9 col-md-12">
-                <h1 class="Htitle">Formulário de Requerimento de
-                    Auxílio Creche / Auxílio Dependente PCD</h1>
-            </div>
-        </div>
-        <form id="FormularioSVP" name="FormularioSVP">
-            <!-- Segurado -->
-            <fieldset>
-                <legend>Dados Pessoais</legend>
-                <div class="form-row">
-                <div class="form-group col-md-6 divIdEmpresa" id="divIdEmpresa">
-                    <label for="InputDescEmpresa">Empresa</label>
-                    <input type="text" class="form-control form-control-sm" value="${AuxItem.DescEmpresa}" id="InputDescEmpresa" placeholder="Empresa" disabled />
-                </div>
-                <div class="form-group col-md-6 divIdEstabelecimento" id="divIdEstabelecimento">
-                    <label for="InputDescEst">Estabelecimento</label>
-                    <input type="text" class="form-control form-control-sm"  value="${AuxItem.DescEstabelecimento}" id="InputDescEst" placeholder="Estabelecimento" disabled/>
-                </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label for="inputMatricula">Matrícula</label>
-                        <input type="text" class="CPF form-control form-control-sm" id="inputMatricula" value = "${AuxItem.Matricula}"
-                            placeholder="${AuxItem.Matricula}" disabled>
-                    </div>
-                    <div class="form-group col-md-9">
-                        <label for="inputName">Nome Completo</label>
-                        <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value = "${AuxItem.NomeCompleto}"
-                            placeholder="${AuxItem.NomeCompleto}" disabled>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputLotacao">Lotação </label>
-                        <input type="text" class="form-control form-control-sm" id="inputLotacao" value = "${AuxItem.Lotacao}"
-                            placeholder="${AuxItem.Lotacao}" disabled>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputGargo">Cargo</label>
-                        <input type="text" class="form-control form-control-sm" id="inputCargo" value = "${AuxItem.CargoDep}" placeholder="${AuxItem.CargoDep}" disabled>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputTelefone">Telefone</label>
-                        <input type="text" class="Date form-control form-control-sm" id="inputTelefone"
-                            placeholder="(__) _____.____" value = "${AuxItem.Telefone}">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputRamal">Ramal</label>
-                        <input type="text" class="form-control form-control-sm" maxlength="5" id="inputRamal" placeholder="Ramal" value = "${AuxItem.Ramal}">
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset>
-                <div class="form-row">
-                    <p><b>Confirmo ter cumprido todos os requisitos exigidos, e venho por meio deste requerer o
-                            benefício
-                            selecionado abaixo:</b></p>
-                </div>
-                <div class="form-row">
-                <div class="form-group">
-                    <input type="checkbox" id="AuxilioCreche" name="AuxilioCreche" />
-                    <label for="scales">Auxílio Creche</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="AuxilioPCD" name="AuxilioPCD" />
-                    <label for="horns">Auxílio para Dependente PCD - Pessoa com Deficiência </label>
-                </div>
-            </div>
-            </fieldset>
-            <fieldset>
-                <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="inputTelefone">Nome do dependente</label>
-                    <select name = "dropdown" class="Date form-control form-control-sm" id="inputNomeDependente" placeholder="Nome do dependete">
-                        <option value = ""></option>
-                        ${depend}
-                    </select>
-                </div>
-            </div>
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <p><b>Documentos Comprobatórios (Obrigatório anexar ao formulário)</b><br>
-                            <b>-Item 4.4.2.1 da NA-035/GG – Auxílio Creche</b><br>
-                            <b>-Item 4.5.1.1 da NA-035/GG – Auxílio para Dependente PCD - Pessoa com Deficiência</b></p>
-                    </div>
-                </div>
-                <div class="form-row" id ="anexosAuxCreche">  
-                    <div class="form-group col-md-12">
-                        <input type="file" name="InputFileDocs" id="InputFileDocs" multiple>
-                            <div id="fileList" class="file-list" id"anexosDivAuxCreche">
-                            ${anexo} 
-                            </div>       
-                    </div>
-                </div>
-            </fieldset>
-            <!-- Assinatura -->
-            <fieldset>
-                <legend>Assinatura</legend>
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                    <div>
-                    <label for="inputEstado">Estado</label>
-                    <select id="inputEstado" class="form-control form-control-sm">
-                        <option selected>${AuxItem.Estado}</option>
-                        <option>Acre (AC)</option>
-                        <option>Alagoas (AL)</option>
-                        <option>Amapá (AP)</option>
-                        <option>Amazonas (AM)</option>
-                        <option>Bahia (BA)</option>
-                        <option>Ceará (CE)</option>
-                        <option>Distrito Federal (DF)</option>
-                        <option>Espírito Santo (ES)</option>
-                        <option>Goiás (GO)</option>
-                        <option>Maranhão (MA)</option>
-                        <option>Mato Grosso (MT)</option>
-                        <option>Mato Grosso do Sul (MS)</option>
-                        <option>Minas Gerais (MG)</option>
-                        <option>Pará (PA)</option>
-                        <option>Paraíba (PB)</option>
-                        <option>Paraná (PR)</option>
-                        <option>Pernambuco (PE)</option>
-                        <option>Piauí (PI)</option>
-                        <option>Rio de Janeiro (RJ)</option>
-                        <option>Rio Grande do Norte (RN)</option>
-                        <option>Rio Grande do Sul (RS)</option>
-                        <option>Rondônia (RO)</option>
-                        <option>Roraima (RR)</option>
-                        <option>Santa Catarina (SC)</option>
-                        <option>São Paulo (SP)</option>
-                        <option>Sergipe (SE)</option>
-                        <option>Tocantins (TO)</option>
-                    </select>
-                </div>
-                    </div>
-                    <div class="form-group col-md-3" id="signature">
-                        <label for="inputDataAss">Data</label>
-                        <input type="text" class="form-control form-control-sm" id="inputDataAss" readonly value = "${AuxItem.Data}"placeholder="${AuxItem.Data}">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="inputAss">Assinatura</label>
-                        <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss"></buttom>
-                    </div>
-                </div>
-            </fieldset>
-            
-        </form>
-    </div>`;
-        return htmlTable;
-    }
-
 
     public htmlTablePopuladoPendente(Segurado: any, Beneficiario: any){
         
@@ -251,13 +65,17 @@ export class TableFormularioComponent {
             <div class="form-header-title col-lg-9 col-md-12">
                 <h1 class="Htitle">Termo de Nomeação de Beneficiários Seguro de Vida de Pessoas</h1>
             </div>
+            <buttom type="button" data-dismiss="modal" class="fechar" id="fecharJanela" style="margin-bottom: 80px;margin-left: 30px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+            </svg>
+            </buttom>
           </div>
           <form id="FormularioSVP" name="FormularioSVP">
               <!-- Segurado -->
               <fieldset>
                   <legend>Dados do Segurado</legend>
                   <div class="form-row global" id="Global${Segurado.ID}">
-
                       <div class="form-group col-md-6">
                           <label for="inputName">Nome completo</label>
                           <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Segurado.Nome}" disabled>
@@ -272,12 +90,17 @@ export class TableFormularioComponent {
                           <label for="inputData">Data de nascimento</label>
                           <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
                       </div>
+                      
                       <div class="form-group col-md-6">
-                          <label for="inputMatricula">Matrícula</label>
-                          <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
-                      </div>
+                        <label for="inputLotacao">Lotação</label>
+                        <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
+                    </div>
                   </div>
                   <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputMatricula">Matrícula</label>
+                        <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
+                    </div>
                     <div class="form-group col-md-4">
                         <label for="inputEmpresa">Empresa</label>
                         <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled >
@@ -285,10 +108,6 @@ export class TableFormularioComponent {
                     <div class="form-group col-md-4">
                         <label for="inputEstabelecimento">Estabelecimento</label>
                         <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="inputLotacao">Lotação</label>
-                        <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
                     </div>
                 </div>
               </fieldset>
@@ -380,7 +199,7 @@ export class TableFormularioComponent {
         </div>
         <div class="form-group col-lg-2 col-md-12" >
             <label for="inputCPFBenf${DataDepend.ID}">CPF</label>
-            <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.codDependente}" value="${DataDepend.CPF}" disabled>
+            <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.ID}" value="${DataDepend.CPF}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12">
             <label for="inputDataBenf${DataDepend.ID}">Nascimento</label>
@@ -404,8 +223,15 @@ export class TableFormularioComponent {
         return htmlForm;
     }
 
-    public htmlTablePopuladoReprovado(Segurado: any){
 
+    public htmlTablePopuladoReprovado(Segurado: any, Beneficiario: any){
+
+        let depend: string = "";
+        for (var i = 0; i < Beneficiario.length; i++) {
+                var dinamico = this.htmlTableBeneficiariosReprovado(Beneficiario[i]);
+                depend += dinamico;
+
+        }
         let htmlbenf = `<div class="paper">
         <div>
           <div class="form-header row justify-content-between">
@@ -415,6 +241,11 @@ export class TableFormularioComponent {
             <div class="form-header-title col-lg-9 col-md-12">
                 <h1 class="Htitle">Termo de Nomeação de Beneficiários Seguro de Vida de Pessoas</h1>
             </div>
+            <buttom type="button" data-dismiss="modal" class="fechar" id="fecharJanela" style="margin-bottom: 80px;margin-left: 30px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path>
+            </svg>
+            </buttom>
           </div>
           <form id="FormularioSVP"  name="FormularioSVP">
               <!-- Segurado -->
@@ -432,29 +263,30 @@ export class TableFormularioComponent {
                       </div>
                   </div>
                   <div class="form-row">
-                      <div class="form-group col-md-6">
-                          <label for="inputData">Data de nascimento</label>
-                          <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
-                      </div>
-                      <div class="form-group col-md-6">
-                          <label for="inputMatricula">Matrícula</label>
-                          <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
-                      </div>
+                  <div class="form-group col-md-6">
+                      <label for="inputData">Data de nascimento</label>
+                      <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
                   </div>
-                  <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="inputEmpresa">Empresa</label>
-                        <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="inputEstabelecimento">Estabelecimento</label>
-                        <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="inputLotacao">Lotação</label>
-                        <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}"  disabled>
-                    </div>
+                  
+                  <div class="form-group col-md-6">
+                    <label for="inputLotacao">Lotação</label>
+                    <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
                 </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputMatricula">Matrícula</label>
+                    <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputEmpresa">Empresa</label>
+                    <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled >
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputEstabelecimento">Estabelecimento</label>
+                    <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
+                </div>
+              </div>
               </fieldset>
               
               <!-- Termo -->
@@ -465,16 +297,18 @@ export class TableFormularioComponent {
               </div>
               <!-- beneficiarios -->
               <fieldset>
-                  <legend>Dados dos Beneficiarios</legend>
-                  <div id="ItensModalEdit">
-                  <!-- conteudo dinamico -->
-                      
+              <legend>Dados dos Beneficiários</legend>
+              <div class="form-row justify-content-between">
+                <buttom type="button" class="btn btn-primary" id="addbenf">Adicionar Beneficiários</buttom>
+              </div>
+              <div id="BenfSec">
+                <!-- conteudo dinamico -->
+                   ${depend} 
 
 
-
-                      <!-- conteudo dinamico -->
-                  </div>
-              </fieldset>
+                <!-- conteudo dinamico -->
+              </div>
+          </fieldset>
               <!-- Avisos -->
               <fieldset>
                   <legend>Dados Importantes</legend>
@@ -516,7 +350,7 @@ export class TableFormularioComponent {
                           <div>
                               <label for="inputEstado">Estado</label>
                               <select id="inputEstado" class="form-control form-control-sm"  >
-                                  <option selected>${Segurado.Estado}</option>
+                                  <option selected>-</option>
                                   <option>Acre (AC)</option>
                                   <option>Alagoas (AL)</option>
                                   <option>Amapá (AP)</option>
@@ -549,11 +383,11 @@ export class TableFormularioComponent {
                       </div>
                       <div class="form-group col-md-3" id="signature">
                           <label for="inputDataAss">Data</label>
-                          <input type="text" class="form-control form-control-sm" id="inputDataAss" value="${Segurado.DataAssinatura}" disabled>
+                          <input type="text" class="form-control form-control-sm" id="inputDataAss" value="" disabled>
                       </div>
                       <div class="form-group col-md-6">
                           <label for="inputAss">Assinatura</label>
-                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss1set" disabled>${Segurado.Assinatura}<buttom>
+                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss"><buttom>
                       </div>
                       
                   </div>
@@ -570,11 +404,11 @@ export class TableFormularioComponent {
                let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.ID}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
             <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiario</label>
-            <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.nomeDependente}" disabled>
+            <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.Nome}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">
             <label for="inputCPFBenf${DataDepend.ID}">CPF</label>
-            <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.codDependente}" value="${DataDepend.CPF}" disabled>
+            <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.ID}" value="${DataDepend.CPF}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
             <label for="inputDataBenf${DataDepend.ID}">Nascimento</label>
@@ -582,21 +416,85 @@ export class TableFormularioComponent {
         </div>
         <div class="form-group col-lg-2 col-md-12" >
             <label for="inputParentescoBenf${DataDepend.ID}">Parentesco</label>
-            <input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.ID}" value="${DataDepend.Parentesco}" disabled>
+            <input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.ID}" value="${DataDepend.Parentesco}">
         </div>
         <div class="form-group col-lg-2 col-md-12" >
         <label for="inputTelefoneBenf${DataDepend.ID}">Telefone</label>
-        <input type="text" class="Telefone form-control form-control-sm" id="inputTelefoneBenf${DataDepend.ID}" value="${DataDepend.Telefone}" disabled>
+        <input type="text" class="Telefone form-control form-control-sm" id="inputTelefoneBenf${DataDepend.ID}" value="${DataDepend.Telefone}">
         </div>
         <div class="form-group col-lg-1 col-md-12">
             <label for="inputPorcentagemBenf${DataDepend.ID}"> %</label>
-            <input type="text" class="Percent form-control form-control-sm" id="inputPorcentagemBenf${DataDepend.ID}" value="${DataDepend.Porcentagem}" disabled>
+            <input type="text" class="Percent form-control form-control-sm" id="inputPorcentagemBenf${DataDepend.ID}" value="${DataDepend.Porcentagem}">
         </div>
+
+        <buttom type="button" class="div_divPai_" id="div_divPai_${DataDepend.ID}" style="border-top-width: 1px;border-left-width: 1px;border-bottom-width: 1px;border-right-width: 1px;padding-left: 12px;padding-right: 12px;margin-top: 31px;margin-bottom: 6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+        </svg>
+        </buttom>
+
       </div>
+      
     `;
 
         return htmlForm;
     }
+
+    public htmlTableBeneficiariosReprovadoAvulso(cont: number) {
+
+        let htmlTable: string = `<div class="form-row itemGlo" id="divPai_${cont}">
+        <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
+            <label for="inputNomeBenf${cont}">Nome beneficiario</label>
+            <input type="text" class="form-control form-control-sm" id="inputNomeBenf${cont}">
+        </div>
+        <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">
+            <label for="inputCPFBenf${cont}">CPF</label>
+            <input type="text" class="CPF form-control form-control-sm" id="inputCPFBenf${cont}">
+        </div>
+        <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
+            <label for="inputDataBenf${cont}">Nascimento</label>
+            <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${cont}">
+        </div>
+        <div class="form-group col-lg-2 col-md-12" id="inputParentescoBenfSelect${cont}">
+            <label for="inputParentescoBenf${cont}">Parentesco</label>
+            <select id="inputParentescoBenf${cont}" class="form-control form-control-sm dropdonw">
+                        <option>-</option>
+                        <option>Avós</option>
+                        <option>Companheiro</option>
+                        <option>Cônjuge</option>
+                        <option>Filho/Enteado</option>
+                        <option>Netos</option>
+                        <option>Pais</option>
+                        <option>Primos</option>
+                        <option>Sobrinhos</option>
+                        <option>Tios</option>
+                        <option>Irmão</option>
+                        <option>Outros</option>
+                    </select>
+        </div>
+        <div class="form-group col-lg-2 col-md-12">
+        <label for="inputTelefoneBenf${cont}">Telefone</label>
+        <input type="text" class="Telefone form-control form-control-sm" id="inputTelefoneBenf${cont}">
+        </div>
+        <div class="form-group col-lg-1 col-md-12">
+            <label for="inputPorcentagemBenf${cont}"> %</label>
+            <input type="text" class="Percent form-control form-control-sm" id="inputPorcentagemBenf${cont}">
+        </div>
+
+        <buttom type="button" class="div_divPai_" id="div_divPai_${cont}" style="border-top-width: 1px;border-left-width: 1px;border-bottom-width: 1px;border-right-width: 1px;padding-left: 12px;padding-right: 12px;margin-top: 31px;margin-bottom: 6px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+        </svg>
+        </buttom>
+
+      </div>
+    `;
+
+        return htmlTable;
+}
+
 
     public htmlTableInit(item: any, newURL: string){
 
@@ -656,6 +554,20 @@ export class TableFormularioComponent {
                           </tr>`;
           }
 
-     return [ HtmlItensTable, pendencia ];
+     return HtmlItensTable;
+    }
+
+    public verificarPendencias(item: any){
+
+        let pendencia: number = 0;
+
+        if (item.Status == "Pendente") {
+            pendencia += 1;
+          }
+          if (item.Status == "Reprovado") {
+            pendencia += 1;
+          }
+
+     return pendencia;
     }
 }

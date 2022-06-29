@@ -33,7 +33,8 @@ export class CadSeguradoService {
             headers: {
                 'ACCEPT': 'application/json; odata.metadata=none',
                 'CONTENT-TYPE': 'application/json',
-                'X-HTTP-Method': 'MERGE'
+                'X-HTTP-Method': 'MERGE',
+                'IF-MATCH':'*'
             }
         },
         deleteNoMetadata: <ISPHttpClientOptions>{
@@ -115,7 +116,7 @@ export class CadSeguradoService {
     public getCadSegurados(user: string): Promise<ICadSeguradoListItem[]> {
         let promise: Promise<ICadSeguradoListItem[]> = new Promise<ICadSeguradoListItem[]>((resolve, reject) => {
 
-            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'`,/**modificar para trazer se tiver alguma linha com status  aprovado ou pendente se for rejeitado deve trazer o formulario */
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'&$orderby=Created desc`,/**modificar para trazer se tiver alguma linha com status  aprovado ou pendente se for rejeitado deve trazer o formulario */
 
                 SPHttpClient.configurations.v1,
                 this._spHttpOptions.getNoMetadata
@@ -173,7 +174,7 @@ export class CadSeguradoService {
       */
      public getLastBySegurado(user: string): Promise<ICadSeguradoListItem> {
         let promise: Promise<ICadSeguradoListItem> = new Promise<ICadSeguradoListItem>((resolve, reject) => {
-            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'`,
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?${SELECT_QUERY}&$filter=Author/Title eq '${user}'&$orderby=ID desc&$top=1`,
                 SPHttpClient.configurations.v1,
                 this._spHttpOptions.getFullMetadata
             ) // get response & parse body as JSON
@@ -259,10 +260,40 @@ export class CadSeguradoService {
         return promise;
     }
 
+     /**
+     * Update a single CreateLog on the list.
+     *
+     * @param {ICadSeguradoListItem} newCadSegurado CadCRA to create.
 
-   
+     */
+      public UpdateCadSegurado(newCadSegurado: ICadSeguradoListItem, id:number): Promise<void> {
+        let promise: Promise<void> = new Promise<void>((resolve, reject) => {
+            // first, get the type of thing we're creating...
+            this._getItemEntityType()
+                .then((spEntityType: string) => {
+                    // create item to create
+                    let newListItem: ICadSeguradoListItem = newCadSegurado;
+                    // add SP-required metadata
+                    newListItem['@odata.type'] = spEntityType;
 
+                    // build request
+                    let requestDetails: any = this._spHttpOptions.updateNoMetadata;
+                    requestDetails.body = JSON.stringify(newListItem);
 
-
-
+                    // create the item
+                    return this.client.post(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items(${id})`,
+                        SPHttpClient.configurations.v1,
+                        requestDetails
+                        
+                    );
+                })
+                .then((): void => {
+                    resolve();
+                })
+                .catch((error: any) => {
+                    reject(error);
+                });
+        });
+        return promise;
+    }
 } 

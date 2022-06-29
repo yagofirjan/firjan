@@ -13,7 +13,6 @@ import { FormularioComponent } from '../../shared/Formulario';
 import { Funcomponent } from '../../shared/Func';
 import { TableFormularioComponent } from '../../shared/TableFormulario';
 import { ModalComponent } from '../../shared/modal';
-import styles from './FormularioSvpWebPart.module.scss';
 import 'bootstrap';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists/web";
@@ -27,12 +26,8 @@ export interface IFormularioSvpWebPartProps {
 }
 
 export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormularioSvpWebPartProps> {
-  /*API EXTERNA */
-  private ordersClient: AadHttpClient;
-  /*API EXTERNA */
-  
+  private ordersClient: AadHttpClient; 
   public segurados = [];
-  
   private ConsultaCadSeguradoService: CadSeguradoService;
   private CadastraCadSeguradoService: CadSeguradoService;
   private ConsultaLastIdService: CadSeguradoService;
@@ -78,6 +73,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
             const htmlTable: string = `<div id="RenderTable"><h1>HTML LISTA DE ITENS<h1></div>`;
             this.domElement.innerHTML = htmlTable;
+            this.modal.ModalLoadInitTable();
             this.LoadHtmlTable();
 
           } else {
@@ -89,7 +85,9 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     }
   }
 
+//Token
   public async Token() {
+    this.modal.ModalLoadInit();
     var token = await this.obterToken.GetToken();
     var dadosColab = await this.consultApi.ObterDadosColabLogado(token);
     var dependentesAtivos = await this.consultApi.ObterDependentesAtivos(token);
@@ -98,8 +96,8 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
+//Form
   private _SetMyData(Data: any, Depend: any) {
-
     this.LoadHtmlForm(Depend);
 
     let SetNome = (<HTMLInputElement>document.getElementById('inputName'));
@@ -126,14 +124,14 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     SetEmpresa.disabled = true;
     SetEstabelecimento.disabled = true;
     SetLotacao.disabled = true;
-
+    this.LoadCamposForm();
   }
   
   private LoadHtmlForm(DataDepend: any) {
     let form = this.formulario.htmlForm(DataDepend);
     this.domElement.innerHTML = form;
-    this.LoadEventForm();
     this.LoadCamposForm();
+    this.LoadEventForm();
   }
 
   private LoadEventForm() {
@@ -143,19 +141,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     BtnFormulario.addEventListener('click', (e) => {
 
       this.ValidaCamposForm();
-
-    });
-    /*INPUT ASSINATURA */
-    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
-    SignatureBtn.addEventListener('click', (e) => {
-
-      this.GetAssinatura();
-
-    });
-    /*BTN MODAL */
-    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
-    BtnCadastrarAssinatura.addEventListener('click', (e) => {
-      this.UploadDadosAssinatura();
 
     });
     /*BOTAO ADICIONA BENEFICIARIO*/
@@ -171,13 +156,30 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       this.LoadCamposForm();
 
     });
+
+    /*INPUT ASSINATURA */
+    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
+    SignatureBtn.addEventListener('click', (e) => {
+   
+      this.GetAssinatura();
+   
+    });
+   
+    /*BTN MODAL */
+    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
+    BtnCadastrarAssinatura.addEventListener('click', (e) => {
+      this.UploadDadosAssinatura();
+    
+    });
+   
     /*BOTAO VOLTAR*/
     let BtnFormularioCancelar = (<HTMLButtonElement>document.getElementById('btnCancelar'));
     BtnFormularioCancelar.addEventListener('click', (e) => {
-
+   
       location.reload();
-
+   
     });
+
   }
 
   private LoadCamposForm() {
@@ -187,15 +189,15 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     $('.Telefone').mask('(00) 00000-0000');
     $('.Percent').mask('###%', {
       reverse: true,
-      onKeyPress: function (val, e, field, options) {
+      onKeyPress: (val, e, field, options) => {
         if (parseInt(val) > 100) {
-          console.clear();
-          this.modal.ModalCustomAlert('O valor maximo permitido 100% !');
-          $('.Percent').val('');
+          this.modal.ModalCustomAlert('O valor maximo permitido é de 100% !');
+          val = '';
         }
       }
     });
-
+    
+    //Clica na lixeira
     let button = document.querySelectorAll('.div_divPai_');
     button.forEach(item => {
       item.addEventListener('click', event => {
@@ -203,14 +205,16 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         let CurrentId: number = parseInt(idItem.split('_')[2]);
         var cpf = (<HTMLInputElement>document.getElementById('inputCPFBenf'+CurrentId+'')).value;
         let index = this.segurados.filter(s => s.cpf === cpf);
+        if(index.length >0){
         for (var se = 0; se < index.length; se++) {
           this.segurados.splice(this.segurados.indexOf(index[se]), 1);
         }
-
+      }
         document.getElementById('divPai_'+CurrentId+'').remove();
       });
     });
 
+    //Seleciona Outros
     let outros = document.querySelectorAll('.dropdonw');
     outros.forEach(item => {
       item.addEventListener('change', event => {
@@ -232,18 +236,16 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
-
     var DataArrumada = this.func.FormtDataAssinatura();
     let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
     inputDataAss.value = DataArrumada;
   }
 
-  //TABLE
+  //Table
   private LoadHtmlTable() {
     let tableForm = this.tableFormulario.htmlTable();
     this.HTMLRenderTable = document.getElementById('RenderTable');
     this.HTMLRenderTable.innerHTML = tableForm;
-
     this._setTable();
   }
 
@@ -251,7 +253,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     const url = this.context.pageContext.web.absoluteUrl;
     const newURL: string = url.split('/sites')[0];
     const UserName = this.context.pageContext.user.displayName;
-
+    let pendencia: number = 0;
     let HtmlItensTable: string = "";
     this.ConsultaCadSeguradoService.getCadSegurados(UserName)
       .then((response: ICadSeguradoListItem[]) => {
@@ -259,15 +261,20 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         response.forEach((item: ICadSeguradoListItem) => {
         
           var hist = this.tableFormulario.htmlTableInit(item, newURL);
-          HtmlItensTable += hist[0];
+          HtmlItensTable += hist;
+
+          var pendencias = this.tableFormulario.verificarPendencias(item);
+          pendencia += pendencias;
 
           let btnSalvaAlteracoes = (<HTMLButtonElement>document.getElementById('NewSolicitacao'));
           btnSalvaAlteracoes.addEventListener('click', () => {
-            if (hist[1] > 0) {
+            if (pendencia > 0) {
               this.modal.ModalAvisoFormPendente();
 
             } else {
+
               this.Token();
+              
             }
           });
 
@@ -280,7 +287,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
-
   private LoadEventTable() {
 
     let ButtonEdit = document.querySelectorAll('.EditBtn');
@@ -291,7 +297,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
         this.ConsultaCadBeneficiarioService.getBeneficiarios(CurrentId)
         .then((response: ICadBeneficiarioListItem[]) => {
-          this.LoadHtmlModalForm(CurrentId, response);
+          this.LoadHtmlModalTable(CurrentId, response);
         });
 
       });
@@ -299,89 +305,65 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
-  //MODAL EDICAO 
-  private LoadHtmlModalForm(ID: number, item: ICadBeneficiarioListItem[]) {
+  private LoadHtmlModalTable(ID: number, item: ICadBeneficiarioListItem[]) {
     
     let htmlFormEditSegurado: string = "";
     this.ConsultaCadSeguradoService.getCadSegurado(ID)
     .then((Segurado: ICadSeguradoListItem) => {
+
       let status = Segurado.Status;
+
       if (status === "Pendente") {
         htmlFormEditSegurado = this.tableFormulario.htmlTablePopuladoPendente(Segurado, item);
         let btnSalvaAlteracoes = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
         btnSalvaAlteracoes.style.display = "none";
+
       } 
-      // else {
-      //   this.tableFormulario.htmlTablePopuladoReprovado(Segurado);
-      // }
+      else {
+
+        htmlFormEditSegurado = this.tableFormulario.htmlTablePopuladoReprovado(Segurado,item);
+
+      }
       let HTMLmodalFormEdit: HTMLElement = document.getElementById('ConteudoModalEdicao');
       HTMLmodalFormEdit.innerHTML = htmlFormEditSegurado;
       $('#ModalEdicao').modal();
-      this._eventTable(ID);
-      this.LoadCamposTable();
+      
+      this.LoadCamposTable(ID);
+      
     });
     
   }
 
-  private _eventTable(ID: number) {
-
-    let BtnFormulario = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
-    BtnFormulario.addEventListener('click', (e) => {
-
-      this.ValidaCamposForm(ID);
-
-    });
-
-    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
-    SignatureBtn.addEventListener('click', (e) => {
-
-      this.GetAssinatura();
-
-    });
-
-    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
-    BtnCadastrarAssinatura.addEventListener('click', (e) => {
-      this.UploadDadosAssinatura();
-
-    });
-    /*BOTAO ADICIONA BENEFICIARIO*/
-    let newbenf = document.getElementById('BenfSec'); //area
-    let addbenf = document.getElementById('addbenf');//btn
-    var cont: number = 0;
-    let htmlbenf = '';
-    addbenf.addEventListener('click', (e) => {
-     
-      cont = cont + 9090;
-      htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
-      newbenf.insertAdjacentHTML('beforeend', htmlbenf);
-      this.LoadCamposTable();
-
-    });
-    /*BOTAO VOLTAR*/
-    let BtnFormularioCancelar = (<HTMLButtonElement>document.getElementById('btnCancelar'));
-    BtnFormularioCancelar.addEventListener('click', (e) => {
-
-      location.reload();
-
-    });
-  }
-
-  private LoadCamposTable() {
+  private LoadCamposTable(ID?: number) {
     //MASCARAS
     $('.CPF').mask('999.999.999-99');
     $('.Date').mask('00/00/0000');
     $('.Telefone').mask('(00) 00000-0000');
     $('.Percent').mask('###%', {
       reverse: true,
-      onKeyPress: function (val, e, field, options) {
+      onKeyPress: (val, e, field, options) => {
         if (parseInt(val) > 100) {
-          console.clear();
-          this.modal.ModalCustomAlert('O valor maximo permitido 100% !');
-          $('.Percent').val('');
+          this.modal.ModalCustomAlert('O valor maximo permitido é de 100% !');
+          val = '';
         }
       }
     });
 
+    // Add Func
+    let newbenf = document.getElementById('BenfSec'); //area
+    let addbenf = (<HTMLButtonElement>document.getElementById('addbenf'));//btn
+
+    var cont: number = 0;
+    let htmlbenf = '';
+    addbenf.addEventListener('click', (e) => {
+      cont = cont + 9090;
+      htmlbenf = this.tableFormulario.htmlTableBeneficiariosReprovadoAvulso(cont);
+      newbenf.insertAdjacentHTML('beforeend', htmlbenf);
+      this.LoadCamposForm();
+    });
+
+    
+    //Clica na lixeira
     let button = document.querySelectorAll('.div_divPai_');
     button.forEach(item => {
       item.addEventListener('click', event => {
@@ -389,14 +371,16 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         let CurrentId: number = parseInt(idItem.split('_')[2]);
         var cpf = (<HTMLInputElement>document.getElementById('inputCPFBenf'+CurrentId+'')).value;
         let index = this.segurados.filter(s => s.cpf === cpf);
+        if(index.length >0){
         for (var se = 0; se < index.length; se++) {
           this.segurados.splice(this.segurados.indexOf(index[se]), 1);
         }
-
+      }
         document.getElementById('divPai_'+CurrentId+'').remove();
       });
     });
 
+    //Seleciona Outros
     let outros = document.querySelectorAll('.dropdonw');
     outros.forEach(item => {
       item.addEventListener('change', event => {
@@ -418,12 +402,43 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
+    /*INPUT Salvar Alteracao */
+    let BtnFormulario = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
+    BtnFormulario.addEventListener('click', (e) => {
+
+      this.ValidaCamposForm(ID);
+
+    });
+
+    /*INPUT ASSINATURA */
+    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
+    SignatureBtn.addEventListener('click', (e) => {
+
+      this.GetAssinatura();
+
+    });
+
+    /*BTN MODAL */
+    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
+    BtnCadastrarAssinatura.addEventListener('click', (e) => {
+      this.UploadDadosAssinatura();
+    
+    });
+
+    /*BOTAO VOLTAR*/
+    let BtnFormularioCancelar = (<HTMLButtonElement>document.getElementById('btnCancelar'));
+    BtnFormularioCancelar.addEventListener('click', (e) => {
+
+      location.reload();
+
+    });
 
     var DataArrumada = this.func.FormtDataAssinatura();
     let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
     inputDataAss.value = DataArrumada;
   }
 
+  //SalvarDados
   private async ValidaCamposForm(ID?: number) {
 
     //SEGURADO
@@ -447,10 +462,9 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
             inputMatricula, inputEmpresa, inputEstabelecimento, inputLotacao, SelectEstado, inputDataAss, BtnAssinatura);
 
           if (validation != true) 
-            return this.modal.ModalError();
+          return console.log("Erro de validação da grid.");
 
           let somaP: number = 0;
-          console.log(contador);
           for (var i = 0; i < contador.length; i++) {
             var id = contador[i].id.split('_')[1];   
             let inputNomeBeneficiario = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
@@ -466,12 +480,17 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
             if(validationGrid != true)
                return console.log("Erro de validação da grid.");
 
+            var validationCamposFormat = await this.func.ValidationCamposFormatados(inputNomeBeneficiario, inputCPFBeneficiario, inputDataNascimentoBeneficiario);
+
+            if(validationCamposFormat != true)
+               return console.log("Erro de validação da grid.");
+
             let valPor = parseInt(inputPorcentagem.split('%')[0]);
             somaP = somaP + valPor ;
            
               if (valPor > 100) {
                 $('.Percent').val('');
-                return this.modal.ModalCustomAlert('A soma dos valores da porcentagem deve ser igual a 100% para o segurado '+ inputNomeBeneficiario +' deve ser no máximo 100% ');
+                return this.modal.ModalCustomAlert('A porcentagem deve ser no máximo 100% para o segurado '+ inputNomeBeneficiario +' ');
               } 
             
               let segurado = {
@@ -488,27 +507,31 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
               this.segurados.splice(this.segurados.indexOf(index[se]), 1);
             }
             this.segurados.push(segurado);
-            console.log(this.segurados);
           }
-          
+        
+        if(somaP > 100 || somaP < 100  )
+            return this.modal.ModalCustomAlert('A soma total das porcentagens não pode ser maior ou menor que 100%.');
+
         if (ID == null || ID == 0 || ID === undefined) 
         {
             this.Gravar();
             this.modal.ModalLoad();
-         } else {
+        } 
+        else 
+        {
             this.Gravar(ID);
             this.modal.ModalLoad();
-         }
+        }
 
-        } 
+      } 
       catch (error) {
-      console.log(this.segurados);
-      this.modal.ModalAviso();
-    }
+
+        this.modal.ModalAviso();
+
+      }
 
   }
   
-  //POST ITEM  
   private Gravar(ID?: number) {
 
     //SEGURADO
@@ -546,14 +569,16 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
           return this.BuscaIDSeguradoSalvo();
         });
     } else {
-      this.CadastraCadSeguradoService.CreateCadSegurado(newCadSegurado)
+      this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
         .then(() => {
-          return this.BuscaIDSeguradoSalvo();
+          return this.SalvaDadosBeneficiarios(ID);
         });
     }
 
   }
+
   private BuscaIDSeguradoSalvo() {
+    
 
     const UserName = this.context.pageContext.user.displayName;
     this.ConsultaCadSeguradoService.getLastBySegurado(UserName)
@@ -562,7 +587,17 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
 
   }
+
   private async SalvaDadosBeneficiarios(SeguradoID: number) {
+    console.log(SeguradoID);
+      this.ConsultaCadBeneficiarioService.getBeneficiarios(SeguradoID)
+          .then((response: ICadBeneficiarioListItem[]) => {
+            if(response.length > 0){
+              response.forEach((item: ICadBeneficiarioListItem) => {
+                this.CadastraCadBeneficiarioService.DeleteCadBeneficiario(item.ID);
+              });
+            }
+          });
 
       for (var i = 0; i < this.segurados.length; i++) {
         
@@ -576,7 +611,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
           Parentesco: this.segurados[i].parentesco,
           Porcentagem: this.segurados[i].porcentagem,
         };
-
         this.CadastraCadBeneficiarioService.CreateCadBeneficiario(newCadBeneficiario);
       }
 
@@ -585,9 +619,8 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       SignatureBtn.innerText = '';
       $("#FormularioSVP").trigger("reset");
       this.render();
-
   }
- 
+
 
   //ASSINATURA
   private async UploadDadosAssinatura() {

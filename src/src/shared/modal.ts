@@ -76,10 +76,11 @@ export class ModalComponent {
       text: 'Não é possível realizar uma nova solicitação no momento, confira se há alguma solicitação Pendente de Aprovação ou Rejeitada.',
       icon: 'warning',
       confirmButtonText: 'OK',
-      confirmButtonColor: "#DD6B55",
+      confirmButtonColor: "#DD6B55"
     });
 
   }
+
   public ModalLoad() {
 
     return Swal.fire({
@@ -89,6 +90,24 @@ export class ModalComponent {
     });
 
   }
+  public ModalLoadInitTable() {
+    return Swal.fire({
+      title: 'Carregando...',
+      showConfirmButton: false,
+      timer: 500,
+      timerProgressBar: true,
+    });
+  }
+
+  public ModalLoadInit() {
+    return Swal.fire({
+      title: 'Carregando Dados...',
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
+
 
   public ModalErrorAnexo() {
 
