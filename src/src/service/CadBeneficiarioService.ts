@@ -34,14 +34,17 @@ export class CadBeneficiarioService {
             headers: {
                 'ACCEPT': 'application/json; odata.metadata=none',
                 'CONTENT-TYPE': 'application/json',
-                'X-HTTP-Method': 'MERGE'
+                'X-HTTP-Method': 'MERGE',
+                'IF-MATCH':'*'
             }
         },
         deleteNoMetadata: <ISPHttpClientOptions>{
             headers: {
                 'ACCEPT': 'application/json; odata.metadata=none',
                 'CONTENT-TYPE': 'application/json',
-                'X-HTTP-Method': 'DELETE'
+                'odata-version': '',
+                'X-HTTP-Method': 'DELETE',
+                'IF-MATCH':'*'
             }
         }
     };
@@ -57,7 +60,7 @@ export class CadBeneficiarioService {
     public getBeneficiarios(IDSeg: number): Promise<ICadBeneficiarioListItem[]> {
         let promise: Promise<ICadBeneficiarioListItem[]> = new Promise<ICadBeneficiarioListItem[]>((resolve, reject) => {
 
-            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?&$filter=IDSegurado eq ${IDSeg}${SELECT_QUERY}&$orderby=ID asc`,
+            this.client.get(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items?&$filter=IDSegurado eq ${IDSeg}${SELECT_QUERY}`,
 
                 SPHttpClient.configurations.v1,
                 this._spHttpOptions.getNoMetadata
@@ -75,6 +78,8 @@ export class CadBeneficiarioService {
 
         return promise;
     }
+
+    
 
     
     /**
@@ -142,6 +147,61 @@ export class CadBeneficiarioService {
                 });
         });
         return promise;
+    }
+
+         /**
+     * Update a single CreateLog on the list.
+     *
+     * @param {ICadAuxCrecheListItem} newCadBeneficiario CadCRA to create.
+
+     */
+          public UpdateCadBeneficiario(newCadBeneficiario: ICadBeneficiarioListItem, id:number): Promise<void> {
+            let promise: Promise<void> = new Promise<void>((resolve, reject) => {
+                // first, get the type of thing we're creating...
+                this._getItemEntityType()
+                    .then((spEntityType: string) => {
+                        // create item to create
+                        let newListItem: ICadBeneficiarioListItem = newCadBeneficiario;
+                        // add SP-required metadata
+                        newListItem['@odata.type'] = spEntityType;
+    
+                        // build request
+                        let requestDetails: any = this._spHttpOptions.updateNoMetadata;
+                        requestDetails.body = JSON.stringify(newListItem);
+    
+                        // create the item
+                        return this.client.post(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items(${id})`,
+                            SPHttpClient.configurations.v1,
+                            requestDetails
+                            
+                        );
+                    })
+                    .then((): void => {
+                        resolve();
+                    })
+                    .catch((error: any) => {
+                        reject(error);
+                    });
+            });
+            return promise;
+        }
+
+
+
+      public DeleteCadBeneficiario(id:number): Promise<void> {
+         let promise: Promise<void> = new Promise<void>((resolve, reject) => {
+            return this.client.post(`${this.siteAbsoluteUrl}${LIST_API_ENDPOINT}/items(${id})`,
+                     SPHttpClient.configurations.v1,
+                     this._spHttpOptions.deleteNoMetadata
+            )
+            .then((): void => {
+               resolve();
+              })
+            .catch((error: any) => {
+                reject(error);
+              });
+        });
+     return promise;     
     }
 
 } 
