@@ -155,6 +155,41 @@ export class Funcomponent {
 
   }
 
+  public async ValidaPorcentagemTotal(segurados: any ){
+      
+    var somatotal : number = 0;
+    for (var i = 0; i < segurados.length; i++) {
+      let valPor = parseInt(segurados[i].porcentagem.split('%')[0]);
+      somatotal = somatotal +valPor ;
+    }
+    if(somatotal > 100 || somatotal < 100  )
+            return this.ModalCustom('A soma total das porcentagens não pode ser maior ou menor que 100%.');
+    
+    return true;
+
+  }
+
+  public async ValidaCPFDuplicado(){
+
+    
+    let contador = document.querySelectorAll('.itemGlo');
+    let cpfDuplicado = [];
+
+    for (var c = 0; c < contador.length; c++) {
+      var id = contador[c].id.split('_')[1]; 
+      let inputCPFBeneficiario = (<HTMLInputElement>document.getElementById('inputCPFBenf' + id)).value;
+      cpfDuplicado.push(inputCPFBeneficiario);
+    }
+    
+    var valida =   new Set(cpfDuplicado).size !== cpfDuplicado.length;
+
+    if(valida == true)
+      return this.ModalCustom('Existem cpfs duplicados na lista de beneficiários. Favor verificar!');
+    
+    return false;
+      
+  }
+
   public _creatEventTable() {
 
     let searchInput = (<HTMLInputElement>document.getElementById("myInput"));

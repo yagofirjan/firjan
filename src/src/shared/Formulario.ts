@@ -7,7 +7,9 @@ export class FormularioComponent {
     constructor(private siteAbsoluteUrl: string, private client: SPHttpClient) { }
 
 
-    public htmlForm(DataDepend: any) {
+    public htmlForm(Data: any, DataDepend: any) {
+
+        let fD = Data.dataNascimento.split("T")[0].split("-"); 
 
         let depend: string = "";
         for (var i = 0; i < DataDepend.length; i++) {
@@ -32,35 +34,35 @@ export class FormularioComponent {
                   <div class="form-row">
                       <div class="form-group col-md-6">
                           <label for="inputName">Nome completo</label>
-                          <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" placeholder="Nome Completo">
+                          <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Data.nome}" placeholder="Nome Completo" disabled>
                       </div>
                       <div class="form-group col-md-6">
                           <label for="inputCpf">CPF</label>
-                          <input type="text" class="CPF form-control form-control-sm" id="inputCpf" placeholder="CPF">
+                          <input type="text" class="CPF form-control form-control-sm" id="inputCpf" value="${Data.documentacao.cpf}" placeholder="CPF" disabled>
                       </div>
                   </div>
                   <div class="form-row">
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-3">
                           <label for="inputData">Data de nascimento</label>
-                          <input type="text" class="Date form-control form-control-sm" id="inputData" placeholder="Data de nascimento">
+                          <input type="text" class="Date form-control form-control-sm" id="inputData" value="${fD[2] + "/" + fD[1] + "/" + fD[0]}" placeholder="Data de nascimento" disabled>
+                      </div>
+                      <div class="form-group col-md-3">
+                          <label for="inputMatricula">Matrícula</label>
+                          <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Data.matricula}" placeholder="Matrícula" disabled>
                       </div>
                       <div class="form-group col-md-6">
-                          <label for="inputMatricula">Matrícula</label>
-                          <input type="text" class="form-control form-control-sm" id="inputMatricula" placeholder="Matrícula">
-                      </div>
+                      <label for="inputLotacao">Lotação</label>
+                      <input type="text" class="form-control form-control-sm" value="${Data.lotacao.id + ' - ' + Data.lotacao.descricao}" id="inputLotacao" disabled>
+                  </div>
                   </div>
                   <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="inputEmpresa">Empresa</label>
-                        <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI">
+                        <input type="text" class="form-control form-control-sm" id="inputEmpresa" value="${Data.empresa.id + ' - ' + Data.empresa.nome}" placeholder="Firjan-SENAI" disabled>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                         <label for="inputEstabelecimento">Estabelecimento</label>
-                        <input type="text" class="form-control form-control-sm" id="inputEstabelecimento">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="inputLotacao">Lotação</label>
-                        <input type="text" class="form-control form-control-sm" id="inputLotacao">
+                        <input type="text" class="form-control form-control-sm" value="${Data.estabelecimento.id + ' - ' + Data.estabelecimento.nome}" id="inputEstabelecimento" disabled>
                     </div>
                 </div>
               </fieldset>
@@ -221,7 +223,7 @@ export class FormularioComponent {
             <input type="text" class="CPF form-control form-control-sm" id="inputCPFBenf${cont}">
         </div>
         <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
-            <label for="inputDataBenf${cont}">Nascimento</label>
+            <label for="inputDataBenf${cont}">Data Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${cont}">
         </div>
         <div class="form-group col-lg-2 col-md-12" id="inputParentescoBenfSelect${cont}">
@@ -277,30 +279,27 @@ export class FormularioComponent {
         } else
         if (DataDepend.grauDependencia == 2) {
             depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Cônjuge</option>
+                        <option value = "Cônjuge" selected >Cônjuge</option>
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 3) {
             depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Pais</option>
+                        <option value = "Pais" selected >Pais</option>
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 4) {
             depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Companheiro</option>
+                        <option value = "Companheiro" selected >Companheiro</option>
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 5) {
             depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Depend.Economico</option>
+                        <option value = "Depend.Economico" selected >Depend.Economico</option>
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 6) {
             depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Consignado</option>
-                        </select>`;
-                        depend += `<select id="inputParentescoBenf${DataDepend.codDependente}" class="form-control form-control-sm">
-                        <option value = "Filho/Enteado" selected >Consignado</option>
+                        <option value = "Consignado" selected >Consignado</option>
                         </select>`;
         }else
         if (DataDepend.grauDependencia == 7) {
@@ -317,7 +316,7 @@ export class FormularioComponent {
             <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.codDependente}" value="${DataDepend.cpf}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
-            <label for="inputDataBenf${DataDepend.codDependente}">Nascimento</label>
+            <label for="inputDataBenf${DataDepend.codDependente}">Data Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.codDependente}" value="${dataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
