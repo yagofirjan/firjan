@@ -119,7 +119,7 @@ export class TableFormularioComponent {
               </div>
               <!-- beneficiarios -->
               <fieldset>
-                  <legend>Dados dos Beneficiarios</legend>
+                  <legend>Dados dos Beneficiários</legend>
                   <div id="ItensModalEdit">
                     <!-- conteudo dinamico -->
                     ${depend}
@@ -193,7 +193,7 @@ export class TableFormularioComponent {
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.ID}">
         <div class="form-group col-lg-3 col-md-12" >
-            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiario</label>
+            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.Nome}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -438,7 +438,7 @@ export class TableFormularioComponent {
         
                let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.ID}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiario</label>
+            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.Nome}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 14.499999995%; flex: 0 0 14.499%;max-width: 14.499%;">
@@ -480,7 +480,7 @@ export class TableFormularioComponent {
 
         let htmlTable: string = `<div class="form-row itemGlo" id="divPai_${cont}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${cont}">Nome beneficiario</label>
+            <label for="inputNomeBenf${cont}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${cont}">
         </div>
         <div class="form-group col-md-1" style="width: 14.499999995%; flex: 0 0 14.499%;max-width: 14.499%;">

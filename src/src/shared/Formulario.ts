@@ -215,7 +215,7 @@ export class FormularioComponent {
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${cont}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${cont}">Nome beneficiario</label>
+            <label for="inputNomeBenf${cont}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${cont}">
         </div>
         <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">
@@ -308,7 +308,7 @@ export class FormularioComponent {
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.codDependente}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${DataDepend.codDependente}">Nome beneficiario</label>
+            <label for="inputNomeBenf${DataDepend.codDependente}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.codDependente}" value="${DataDepend.nomeDependente}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">

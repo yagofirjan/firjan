@@ -548,11 +548,13 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
     if (ID == null || ID == 0 || ID === undefined) 
     {
+      console.log('entrou no primeiro salvar');
       this.CadastraCadSeguradoService.CreateCadSegurado(newCadSegurado)
         .then(() => {
           return this.BuscaIDSeguradoSalvo();
         });
     } else {
+      console.log('entrou no editar');
       this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
         .then(() => {
           return this.SalvaDadosBeneficiarios(ID);
@@ -576,13 +578,14 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
       this.ConsultaCadBeneficiarioService.getBeneficiarios(SeguradoID)
           .then((response: ICadBeneficiarioListItem[]) => {
+            console.log(response);
             if(response.length > 0){
               response.forEach((item: ICadBeneficiarioListItem) => {
                 this.CadastraCadBeneficiarioService.DeleteCadBeneficiario(item.ID);
               });
             }
           });
-
+      
       for (var i = 0; i < this.segurados.length; i++) {
         
         const newCadBeneficiario: ICadBeneficiarioListItem = <ICadBeneficiarioListItem>{
