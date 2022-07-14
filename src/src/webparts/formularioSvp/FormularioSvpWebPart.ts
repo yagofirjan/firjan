@@ -73,7 +73,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
             const htmlTable: string = `<div id="RenderTable"><h1>HTML LISTA DE ITENS<h1></div>`;
             this.domElement.innerHTML = htmlTable;
-            this.modal.ModalLoadInitTable();
             this.LoadHtmlTable();
 
           } else {
@@ -92,43 +91,14 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     var dadosColab = await this.consultApi.ObterDadosColabLogado(token);
     var dependentesAtivos = await this.consultApi.ObterDependentesAtivos(token);
 
-    this._SetMyData(dadosColab, dependentesAtivos);
+    this.LoadHtmlForm(dadosColab, dependentesAtivos);
 
   }
 
 //Form
-  private _SetMyData(Data: any, Depend: any) {
-    this.LoadHtmlForm(Depend);
-
-    let SetNome = (<HTMLInputElement>document.getElementById('inputName'));
-    let SetCPF = (<HTMLInputElement>document.getElementById('inputCpf'));
-    let SetDataNascimento = (<HTMLInputElement>document.getElementById('inputData'));
-    let SetMatricula = (<HTMLInputElement>document.getElementById('inputMatricula'));
-    let SetEmpresa = (<HTMLInputElement>document.getElementById('inputEmpresa'));
-    let SetEstabelecimento = (<HTMLInputElement>document.getElementById('inputEstabelecimento'));
-    let SetLotacao = (<HTMLInputElement>document.getElementById('inputLotacao'));
-
-    SetNome.value = Data.nome;
-    SetCPF.value = Data.documentacao.cpf;
-    let fD = Data.dataNascimento.split("T")[0].split("-");
-    SetDataNascimento.value = fD[2] + "/" + fD[1] + "/" + fD[0];
-    SetMatricula.value = Data.matricula;
-    SetEmpresa.value = Data.empresa.id + ' - ' + Data.empresa.nome;
-    SetEstabelecimento.value = Data.estabelecimento.id + ' - ' + Data.estabelecimento.nome;
-    SetLotacao.value = Data.lotacao.id + ' - ' + Data.lotacao.descricao;
-
-    SetNome.disabled = true;
-    SetCPF.disabled = true;
-    SetDataNascimento.disabled = true;
-    SetMatricula.disabled = true;
-    SetEmpresa.disabled = true;
-    SetEstabelecimento.disabled = true;
-    SetLotacao.disabled = true;
-    this.LoadCamposForm();
-  }
   
-  private LoadHtmlForm(DataDepend: any) {
-    let form = this.formulario.htmlForm(DataDepend);
+  private LoadHtmlForm(Data: any, DataDepend: any) {
+    let form = this.formulario.htmlForm(Data,DataDepend);
     this.domElement.innerHTML = form;
     this.LoadCamposForm();
     this.LoadEventForm();
@@ -349,6 +319,11 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       }
     });
 
+    var DataArrumada = this.func.FormtDataAssinatura();
+    let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
+    inputDataAss.value = DataArrumada;
+
+
     // Add Func
     let newbenf = document.getElementById('BenfSec'); //area
     let addbenf = (<HTMLButtonElement>document.getElementById('addbenf'));//btn
@@ -433,9 +408,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
     });
 
-    var DataArrumada = this.func.FormtDataAssinatura();
-    let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
-    inputDataAss.value = DataArrumada;
+
   }
 
   //SalvarDados
@@ -456,6 +429,10 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let BtnAssinatura = (<HTMLButtonElement>document.getElementById('ActionAss')).textContent;
     //BENEFICIARIOS
     let contador = document.querySelectorAll('.itemGlo');
+    
+    var validationCPF = await this.func.ValidaCPFDuplicado();   
+    if (validationCPF != false) 
+          return console.log("Erro de validação de CPF duplicado.");      
 
     try {
           var validation = await this.func.Validation(inputNome, inputCPF, inputDataNascimento,
@@ -490,9 +467,13 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
            
               if (valPor > 100) {
                 $('.Percent').val('');
-                return this.modal.ModalCustomAlert('A porcentagem deve ser no máximo 100% para o segurado '+ inputNomeBeneficiario +' ');
+                return this.modal.ModalCustomAlert('A porcentagem deve ser de no máximo 100% para o beneficiário '+ inputNomeBeneficiario +' ');
               } 
-            
+              if (valPor == 0) {
+                $('.Percent').val('');
+                return this.modal.ModalCustomAlert('A porcentagem não pode ser 0% para o beneficiário '+ inputNomeBeneficiario +' ');
+              } 
+
               let segurado = {
               "nome": inputNomeBeneficiario,
               "cpf" : inputCPFBeneficiario,
@@ -508,10 +489,12 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
             }
             this.segurados.push(segurado);
           }
-        
-        if(somaP > 100 || somaP < 100  )
-            return this.modal.ModalCustomAlert('A soma total das porcentagens não pode ser maior ou menor que 100%.');
 
+          var validationPorcentagem = await this.func.ValidaPorcentagemTotal(this.segurados);
+        
+          if(validationPorcentagem != true)
+            return console.log("Erro de validação da porcentagem!");
+        
         if (ID == null || ID == 0 || ID === undefined) 
         {
             this.Gravar();
@@ -532,7 +515,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
   
-  private Gravar(ID?: number) {
+  private async Gravar(ID?: number) {
 
     //SEGURADO
     let ValueNome = (<HTMLInputElement>document.getElementById('inputName')).value;
@@ -562,13 +545,16 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       Assinatura: ValueAssinatura,
     };
     
+
     if (ID == null || ID == 0 || ID === undefined) 
     {
+      console.log('entrou no primeiro salvar');
       this.CadastraCadSeguradoService.CreateCadSegurado(newCadSegurado)
         .then(() => {
           return this.BuscaIDSeguradoSalvo();
         });
     } else {
+      console.log('entrou no editar');
       this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
         .then(() => {
           return this.SalvaDadosBeneficiarios(ID);
@@ -589,16 +575,17 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
   }
 
   private async SalvaDadosBeneficiarios(SeguradoID: number) {
-    console.log(SeguradoID);
+
       this.ConsultaCadBeneficiarioService.getBeneficiarios(SeguradoID)
           .then((response: ICadBeneficiarioListItem[]) => {
+            console.log(response);
             if(response.length > 0){
               response.forEach((item: ICadBeneficiarioListItem) => {
                 this.CadastraCadBeneficiarioService.DeleteCadBeneficiario(item.ID);
               });
             }
           });
-
+      
       for (var i = 0; i < this.segurados.length; i++) {
         
         const newCadBeneficiario: ICadBeneficiarioListItem = <ICadBeneficiarioListItem>{

@@ -86,26 +86,25 @@ export class TableFormularioComponent {
                       </div>
                   </div>
                   <div class="form-row">
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-3">
                           <label for="inputData">Data de nascimento</label>
                           <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
                       </div>
-                      
+                      <div class="form-group col-md-3">
+                      <label for="inputMatricula">Matrícula</label>
+                      <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
+                    </div>
                       <div class="form-group col-md-6">
                         <label for="inputLotacao">Lotação</label>
                         <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
                     </div>
                   </div>
                   <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="inputMatricula">Matrícula</label>
-                        <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
-                    </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="inputEmpresa">Empresa</label>
                         <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled >
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label for="inputEstabelecimento">Estabelecimento</label>
                         <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
                     </div>
@@ -120,7 +119,7 @@ export class TableFormularioComponent {
               </div>
               <!-- beneficiarios -->
               <fieldset>
-                  <legend>Dados dos Beneficiarios</legend>
+                  <legend>Dados dos Beneficiários</legend>
                   <div id="ItensModalEdit">
                     <!-- conteudo dinamico -->
                     ${depend}
@@ -194,7 +193,7 @@ export class TableFormularioComponent {
 
         let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.ID}">
         <div class="form-group col-lg-3 col-md-12" >
-            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiario</label>
+            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.Nome}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -202,7 +201,7 @@ export class TableFormularioComponent {
             <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.ID}" value="${DataDepend.CPF}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12">
-            <label for="inputDataBenf${DataDepend.ID}">Nascimento</label>
+            <label for="inputDataBenf${DataDepend.ID}">Data de Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.ID}" value="${DataDepend.DataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -251,8 +250,7 @@ export class TableFormularioComponent {
               <!-- Segurado -->
               <fieldset>
                   <legend>Dados do Segurado</legend>
-                  <div class="form-row global" id="Global${Segurado.ID}" >
-
+                  <div class="form-row global" id="Global${Segurado.ID}">
                       <div class="form-group col-md-6">
                           <label for="inputName">Nome completo</label>
                           <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Segurado.Nome}" disabled>
@@ -263,30 +261,29 @@ export class TableFormularioComponent {
                       </div>
                   </div>
                   <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="inputData">Data de nascimento</label>
-                      <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
+                      <div class="form-group col-md-3">
+                          <label for="inputData">Data de nascimento</label>
+                          <input type="text" class="Date form-control form-control-sm" id="inputData" value="${Segurado.DataNascimento}" disabled>
+                      </div>
+                      <div class="form-group col-md-3">
+                      <label for="inputMatricula">Matrícula</label>
+                      <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
+                    </div>
+                      <div class="form-group col-md-6">
+                        <label for="inputLotacao">Lotação</label>
+                        <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
+                    </div>
                   </div>
-                  
-                  <div class="form-group col-md-6">
-                    <label for="inputLotacao">Lotação</label>
-                    <input type="text" class="form-control form-control-sm" id="inputLotacao" value="${Segurado.Lotacao}" disabled >
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmpresa">Empresa</label>
+                        <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEstabelecimento">Estabelecimento</label>
+                        <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
+                    </div>
                 </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="inputMatricula">Matrícula</label>
-                    <input type="text" class="form-control form-control-sm" id="inputMatricula" value="${Segurado.Matricula}" disabled>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="inputEmpresa">Empresa</label>
-                    <input type="text" class="form-control form-control-sm" id="inputEmpresa" placeholder="Firjan-SENAI"value="${Segurado.Empresa}" disabled >
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="inputEstabelecimento">Estabelecimento</label>
-                    <input type="text" class="form-control form-control-sm" id="inputEstabelecimento" value="${Segurado.Estabelecimento}" disabled>
-                </div>
-              </div>
               </fieldset>
               
               <!-- Termo -->
@@ -401,12 +398,50 @@ export class TableFormularioComponent {
 
     public htmlTableBeneficiariosReprovado(DataDepend: any) {
 
+        let depend: string = "";
+        
+        if (DataDepend.Parentesco == "Filho/Enteado") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = "Filho/Enteado" selected >Filho/Enteado</option>
+                        </select>`;
+        } else
+        if (DataDepend.Parentesco == "Cônjuge") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = "Cônjuge" selected >Cônjuge</option>
+                        </select>`;
+        }else
+        if (DataDepend.Parentesco == "Pais") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = "Pais" selected >Pais</option>
+                        </select>`;
+        }else
+        if (DataDepend.Parentesco == "Companheiro") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = "Companheiro" selected >Companheiro</option>
+                        </select>`;
+        }else
+        if (DataDepend.Parentesco == "Depend.Economico") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = ">Depend.Economico" selected >Depend.Economico</option>
+                        </select>`;
+        }else
+        if (DataDepend.Parentesco == "Consignado") {
+            depend += `<select id="inputParentescoBenf${DataDepend.ID}" class="form-control form-control-sm">
+                        <option value = "Consignado" selected >Consignado</option>
+                        </select>`;
+        }else
+        if (DataDepend.Parentesco == "Outros") {
+            depend += `<input type="text" class="GrauParentesco form-control form-control-sm" placeholder="Informe o Grau." id="inputParentescoBenf${DataDepend.ID}">`;
+        }else{
+            depend += `<input type="text" class="GrauParentesco form-control form-control-sm"   value="${DataDepend.Parentesco}" id="inputParentescoBenf${DataDepend.ID}">`;
+        }
+        
                let htmlForm: string = `<div class="form-row itemGlo" id="divPai_${DataDepend.ID}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiario</label>
+            <label for="inputNomeBenf${DataDepend.ID}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${DataDepend.ID}" value="${DataDepend.Nome}" disabled>
         </div>
-        <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">
+        <div class="form-group col-md-1" style="width: 14.499999995%; flex: 0 0 14.499%;max-width: 14.499%;">
             <label for="inputCPFBenf${DataDepend.ID}">CPF</label>
             <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.ID}" value="${DataDepend.CPF}" disabled>
         </div>
@@ -415,14 +450,14 @@ export class TableFormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.ID}" value="${DataDepend.DataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
-            <label for="inputParentescoBenf${DataDepend.ID}">Parentesco</label>
-            <input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.ID}" value="${DataDepend.Parentesco}">
+            <label for="inputParentescoBenf${DataDepend.codDependente}">Parentesco</label>
+            ${depend}
         </div>
-        <div class="form-group col-lg-2 col-md-12" >
+        <div class="form-group col-lg-2 col-md-12">
         <label for="inputTelefoneBenf${DataDepend.ID}">Telefone</label>
         <input type="text" class="Telefone form-control form-control-sm" id="inputTelefoneBenf${DataDepend.ID}" value="${DataDepend.Telefone}">
         </div>
-        <div class="form-group col-lg-1 col-md-12">
+        <div class="form-group col-lg-1 col-md-12" style="width: 7.499999995%; flex: 0 0 7.499%;max-width: 7.499%;"> 
             <label for="inputPorcentagemBenf${DataDepend.ID}"> %</label>
             <input type="text" class="Percent form-control form-control-sm" id="inputPorcentagemBenf${DataDepend.ID}" value="${DataDepend.Porcentagem}">
         </div>
@@ -445,10 +480,10 @@ export class TableFormularioComponent {
 
         let htmlTable: string = `<div class="form-row itemGlo" id="divPai_${cont}">
         <div class="form-group col-md-1" style="width: 28.499999995%; flex: 0 0 28.499%;max-width: 28.499%;">
-            <label for="inputNomeBenf${cont}">Nome beneficiario</label>
+            <label for="inputNomeBenf${cont}">Nome beneficiário</label>
             <input type="text" class="form-control form-control-sm" id="inputNomeBenf${cont}">
         </div>
-        <div class="form-group col-md-1" style="width: 12.499999995%; flex: 0 0 12.499%;max-width: 12.499%;">
+        <div class="form-group col-md-1" style="width: 14.499999995%; flex: 0 0 14.499%;max-width: 14.499%;">
             <label for="inputCPFBenf${cont}">CPF</label>
             <input type="text" class="CPF form-control form-control-sm" id="inputCPFBenf${cont}">
         </div>
@@ -477,7 +512,7 @@ export class TableFormularioComponent {
         <label for="inputTelefoneBenf${cont}">Telefone</label>
         <input type="text" class="Telefone form-control form-control-sm" id="inputTelefoneBenf${cont}">
         </div>
-        <div class="form-group col-lg-1 col-md-12">
+        <div class="form-group col-lg-1 col-md-12" style="width: 7.499999995%; flex: 0 0 7.499%;max-width: 7.499%;"> 
             <label for="inputPorcentagemBenf${cont}"> %</label>
             <input type="text" class="Percent form-control form-control-sm" id="inputPorcentagemBenf${cont}">
         </div>
