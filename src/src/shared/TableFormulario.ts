@@ -76,7 +76,7 @@ export class TableFormularioComponent {
               <fieldset>
                   <legend>Dados do Segurado</legend>
                   <div class="form-row global" id="Global${Segurado.ID}">
-                      <div class="form-group col-md-6">
+                  <div class="form-group col-md-6 divNome" id="divNome_${Segurado.Login}">
                           <label for="inputName">Nome completo</label>
                           <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Segurado.Nome}" disabled>
                       </div>
@@ -251,7 +251,7 @@ export class TableFormularioComponent {
               <fieldset>
                   <legend>Dados do Segurado</legend>
                   <div class="form-row global" id="Global${Segurado.ID}">
-                      <div class="form-group col-md-6">
+                  <div class="form-group col-md-6 divNome" id="divNome_${Segurado.Login}">
                           <label for="inputName">Nome completo</label>
                           <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Segurado.Nome}" disabled>
                       </div>

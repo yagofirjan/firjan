@@ -32,7 +32,7 @@ export class FormularioComponent {
               <fieldset>
                   <legend>Dados do Segurado</legend>
                   <div class="form-row">
-                      <div class="form-group col-md-6">
+                      <div class="form-group col-md-6 divNome" id="divNome_${Data.login}">
                           <label for="inputName">Nome completo</label>
                           <input type="text" class="form-control form-control-sm" id="inputName" name="inputName" value="${Data.nome}" placeholder="Nome Completo" disabled>
                       </div>

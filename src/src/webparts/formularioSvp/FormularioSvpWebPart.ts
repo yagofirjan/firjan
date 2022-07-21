@@ -219,18 +219,18 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     this._setTable();
   }
 
-  private _setTable() {
+  private async _setTable() {
     const url = this.context.pageContext.web.absoluteUrl;
     const newURL: string = url.split('/sites')[0];
     const UserName = this.context.pageContext.user.displayName;
     let pendencia: number = 0;
     let HtmlItensTable: string = "";
-    this.ConsultaCadSeguradoService.getCadSegurados(UserName)
-      .then((response: ICadSeguradoListItem[]) => {
+    await this.ConsultaCadSeguradoService.getCadSegurados(UserName)
+      .then(async(response: ICadSeguradoListItem[]) => {
 
-        response.forEach((item: ICadSeguradoListItem) => {
+        await response.forEach(async(item: ICadSeguradoListItem) => {
         
-          var hist = this.tableFormulario.htmlTableInit(item, newURL);
+          var hist = await this.tableFormulario.htmlTableInit(item, newURL);
           HtmlItensTable += hist;
 
           var pendencias = this.tableFormulario.verificarPendencias(item);
@@ -250,24 +250,24 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
           this.HTMLTableItens = document.getElementById('TableTR');
           this.HTMLTableItens.innerHTML = HtmlItensTable;
-          this.LoadEventTable();
-          this.func._creatEventTable();
+          await this.LoadEventTable();
+          await this.func._creatEventTable();
         });
       });
 
   }
 
-  private LoadEventTable() {
+  private async LoadEventTable() {
 
     let ButtonEdit = document.querySelectorAll('.EditBtn');
-    ButtonEdit.forEach(item => {
-      item.addEventListener('click', event => {
+   await ButtonEdit.forEach(item => {
+      item.addEventListener('click', async event => {
         let idItem = item.id;
         let CurrentId: number = parseInt(idItem.split('Btn')[1]);
 
-        this.ConsultaCadBeneficiarioService.getBeneficiarios(CurrentId)
-        .then((response: ICadBeneficiarioListItem[]) => {
-          this.LoadHtmlModalTable(CurrentId, response);
+        await this.ConsultaCadBeneficiarioService.getBeneficiarios(CurrentId)
+        .then(async (response: ICadBeneficiarioListItem[]) => {
+           this.LoadHtmlModalTable(CurrentId, response);
         });
 
       });
@@ -530,7 +530,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let ValueEstado = (<HTMLSelectElement>document.getElementById('inputEstado')).value;
     let ValueDataAss = (<HTMLInputElement>document.getElementById('inputDataAss')).value;
     let ValueAssinatura = (<HTMLButtonElement>document.getElementById('ActionAss')).textContent;
-
+    let login = (<HTMLInputElement>document.querySelector('.divNome')).id.split('_')[1];
     const newCadSegurado: ICadSeguradoListItem = <ICadSeguradoListItem>{
       Nome: ValueNome,
       CPF: ValueCPF,
@@ -543,45 +543,42 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       DataAssinatura: ValueDataAss,
       Status: "Pendente",
       Assinatura: ValueAssinatura,
+      Login: login,
     };
     
 
     if (ID == null || ID == 0 || ID === undefined) 
     {
-      console.log('entrou no primeiro salvar');
-      this.CadastraCadSeguradoService.CreateCadSegurado(newCadSegurado)
-        .then(() => {
-          return this.BuscaIDSeguradoSalvo();
+     await this.CadastraCadSeguradoService.CreateCadSegurado(newCadSegurado)
+        .then(async() => {
+          return await this.BuscaIDSeguradoSalvo();
         });
     } else {
-      console.log('entrou no editar');
-      this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
-        .then(() => {
-          return this.SalvaDadosBeneficiarios(ID);
+      await this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
+        .then(async() => {
+          return await this.SalvaDadosBeneficiarios(ID);
         });
     }
 
   }
 
-  private BuscaIDSeguradoSalvo() {
-    
-
+  private async BuscaIDSeguradoSalvo() {
     const UserName = this.context.pageContext.user.displayName;
-    this.ConsultaCadSeguradoService.getLastBySegurado(UserName)
-      .then((response: ICadSeguradoListItem) => {
-        return this.SalvaDadosBeneficiarios(response.ID);
+    await this.ConsultaCadSeguradoService.getLastBySegurado(UserName)
+      .then(async(response: ICadSeguradoListItem) => {
+        return await this.SalvaDadosBeneficiarios(response.ID);
       });
 
   }
 
   private async SalvaDadosBeneficiarios(SeguradoID: number) {
 
-      this.ConsultaCadBeneficiarioService.getBeneficiarios(SeguradoID)
-          .then((response: ICadBeneficiarioListItem[]) => {
+    await this.ConsultaCadBeneficiarioService.getBeneficiarios(SeguradoID)
+          .then(async(response: ICadBeneficiarioListItem[]) => {
             console.log(response);
             if(response.length > 0){
-              response.forEach((item: ICadBeneficiarioListItem) => {
-                this.CadastraCadBeneficiarioService.DeleteCadBeneficiario(item.ID);
+              await response.forEach(async(item: ICadBeneficiarioListItem) => {
+                await this.CadastraCadBeneficiarioService.DeleteCadBeneficiario(item.ID);
               });
             }
           });
@@ -598,7 +595,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
           Parentesco: this.segurados[i].parentesco,
           Porcentagem: this.segurados[i].porcentagem,
         };
-        this.CadastraCadBeneficiarioService.CreateCadBeneficiario(newCadBeneficiario);
+        await this.CadastraCadBeneficiarioService.CreateCadBeneficiario(newCadBeneficiario);
       }
 
       this.modal.ModalSucesso();
