@@ -20,7 +20,7 @@ import 'jquery-mask-plugin';
 require('../../../node_modules/bootstrap/dist/css/bootstrap.min.css');
 require('../../styles/formStyles.css');
 require('jquery-mask-plugin');
-
+import Swal from 'sweetalert2';
 export interface IFormularioSvpWebPartProps {
   description: string;
 }
@@ -86,7 +86,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
 //Token
   public async Token() {
-    this.modal.ModalLoadInit();
+    Swal.showLoading();
     var token = await this.obterToken.GetToken();
     var dadosColab = await this.consultApi.ObterDadosColabLogado(token);
     var dependentesAtivos = await this.consultApi.ObterDependentesAtivos(token);
@@ -102,6 +102,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     this.domElement.innerHTML = form;
     this.LoadCamposForm();
     this.LoadEventForm();
+    Swal.close();
   }
 
   private LoadEventForm() {
@@ -213,6 +214,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   //Table
   private LoadHtmlTable() {
+    Swal.showLoading();
     let tableForm = this.tableFormulario.htmlTable();
     this.HTMLRenderTable = document.getElementById('RenderTable');
     this.HTMLRenderTable.innerHTML = tableForm;
@@ -250,6 +252,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
           this.HTMLTableItens = document.getElementById('TableTR');
           this.HTMLTableItens.innerHTML = HtmlItensTable;
+          Swal.close();
           await this.LoadEventTable();
           await this.func._creatEventTable();
         });
@@ -262,6 +265,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let ButtonEdit = document.querySelectorAll('.EditBtn');
    await ButtonEdit.forEach(item => {
       item.addEventListener('click', async event => {
+        Swal.showLoading();
         let idItem = item.id;
         let CurrentId: number = parseInt(idItem.split('Btn')[1]);
 
@@ -296,6 +300,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       }
       let HTMLmodalFormEdit: HTMLElement = document.getElementById('ConteudoModalEdicao');
       HTMLmodalFormEdit.innerHTML = htmlFormEditSegurado;
+      Swal.close();
       $('#ModalEdicao').modal();
       
       this.LoadCamposTable(ID);
@@ -598,7 +603,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         await this.CadastraCadBeneficiarioService.CreateCadBeneficiario(newCadBeneficiario);
       }
 
-      this.modal.ModalSucesso();
+      await this.modal.ModalSucesso();
       let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
       SignatureBtn.innerText = '';
       $("#FormularioSVP").trigger("reset");
