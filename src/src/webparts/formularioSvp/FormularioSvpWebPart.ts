@@ -296,7 +296,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       else {
 
         htmlFormEditSegurado = this.tableFormulario.htmlTablePopuladoReprovado(Segurado,item);
-
+        
       }
       let HTMLmodalFormEdit: HTMLElement = document.getElementById('ConteudoModalEdicao');
       HTMLmodalFormEdit.innerHTML = htmlFormEditSegurado;

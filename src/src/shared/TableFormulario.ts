@@ -384,7 +384,7 @@ export class TableFormularioComponent {
                       </div>
                       <div class="form-group col-md-6">
                           <label for="inputAss">Assinatura</label>
-                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss"><buttom>
+                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss" value=""><buttom>
                       </div>
                       
                   </div>

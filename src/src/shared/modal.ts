@@ -57,7 +57,7 @@ export class ModalComponent {
 
     return Swal.fire({
       title: 'Tudo Certo!',
-      text: 'Seu formulario foi salvo com sucesso!',
+      text: 'Sua solicitação foi realizada com sucesso.',
       icon: 'success',
       confirmButtonText: 'OK',
       confirmButtonColor: "#32CD32"

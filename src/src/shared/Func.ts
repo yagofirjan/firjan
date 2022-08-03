@@ -98,7 +98,7 @@ export class Funcomponent {
       {
         return this.ModalCustom("O preenchimento do campo Data de Assinatura é obrigatório.");
       }
-      else if (BtnAssinatura == "")
+      else if (BtnAssinatura == "" || BtnAssinatura == "\n                      ")
       {
         return this.ModalCustom("O preenchimento do campo Assinatura é obrigatório.");
       }
