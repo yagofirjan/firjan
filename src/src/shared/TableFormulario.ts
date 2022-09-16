@@ -201,7 +201,7 @@ export class TableFormularioComponent {
             <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.ID}" value="${DataDepend.CPF}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12">
-            <label for="inputDataBenf${DataDepend.ID}">Data de Nascimento</label>
+            <label for="inputDataBenf${DataDepend.ID}">Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.ID}" value="${DataDepend.DataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -528,7 +528,7 @@ export class TableFormularioComponent {
     `;
 
         return htmlTable;
-}
+    }
 
 
     public htmlTableInit(item: any, newURL: string){

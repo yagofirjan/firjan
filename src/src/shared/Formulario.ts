@@ -223,7 +223,7 @@ export class FormularioComponent {
             <input type="text" class="CPF form-control form-control-sm" id="inputCPFBenf${cont}">
         </div>
         <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
-            <label for="inputDataBenf${cont}">Data Nascimento</label>
+            <label for="inputDataBenf${cont}">Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${cont}">
         </div>
         <div class="form-group col-lg-2 col-md-12" id="inputParentescoBenfSelect${cont}">
