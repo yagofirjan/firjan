@@ -277,6 +277,25 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
+    //Motivo  
+    let BtnOptionsMotivo = document.querySelectorAll('.SPVOptionsMotivo');
+    BtnOptionsMotivo.forEach(item => {
+      item.addEventListener('click', async event => {
+        Swal.showLoading();
+        let idItem = item.id;
+        let CurrentId: number = parseInt(idItem.split('SPVOptionsMotivo')[1]);
+
+          this.ConsultaCadSeguradoService.getCadSegurado(CurrentId)
+            .then(async (Segurado: ICadSeguradoListItem) => {
+              Swal.fire(
+                'Motivo Rejeição?',
+                ''+Segurado.Motivo+'',
+                'info'
+              );
+          });
+        });
+    });
+    
   }
 
   private LoadHtmlModalTable(ID: number, item: ICadBeneficiarioListItem[]) {
@@ -547,6 +566,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       Estado: ValueEstado,
       DataAssinatura: ValueDataAss,
       Status: "Pendente",
+      Motivo:"",
       Assinatura: ValueAssinatura,
       Login: login,
     };

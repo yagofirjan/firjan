@@ -12,6 +12,7 @@ export interface ICadSeguradoListItem {
     DataAssinatura:string;
     Status:string;
     Login:string;
+    Motivo:string;
     Author: string;
     AttachmentFiles: any;
     Assinatura:string;
