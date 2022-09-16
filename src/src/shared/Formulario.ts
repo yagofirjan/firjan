@@ -316,7 +316,7 @@ export class FormularioComponent {
             <input type="text" class="CPF  form-control form-control-sm" id="inputCPFBenf${DataDepend.codDependente}" value="${DataDepend.cpf}" disabled>
         </div>
         <div class="form-group col-md-1" style="width: 11.499999995%; flex: 0 0 11.499%;max-width: 11.499%;">
-            <label for="inputDataBenf${DataDepend.codDependente}">Data Nascimento</label>
+            <label for="inputDataBenf${DataDepend.codDependente}">Nascimento</label>
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.codDependente}" value="${dataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
