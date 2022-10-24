@@ -56,7 +56,7 @@ export class TableFormularioComponent {
 
         }
         
-        let htmlbenf = `<div class="paper" >
+        let htmlbenf = `<div class="paper" id="paper">
         <div>
           <div class="form-header row justify-content-between">
             <div class="form-header-logo col-lg-2 col-md-12">
@@ -231,7 +231,7 @@ export class TableFormularioComponent {
                 depend += dinamico;
 
         }
-        let htmlbenf = `<div class="paper">
+        let htmlbenf = `<div class="paper" id="paper">
         <div>
           <div class="form-header row justify-content-between">
             <div class="form-header-logo col-lg-2 col-md-12">

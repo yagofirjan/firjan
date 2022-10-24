@@ -21,6 +21,10 @@ require('../../../node_modules/bootstrap/dist/css/bootstrap.min.css');
 require('../../styles/formStyles.css');
 require('jquery-mask-plugin');
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';  
+import html2canvas from 'html2canvas';  
+
+
 export interface IFormularioSvpWebPartProps {
   description: string;
 }
@@ -41,6 +45,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
   private tableFormulario: TableFormularioComponent;
   private modal: ModalComponent;
   private func: Funcomponent;
+
  
   protected onInit(): Promise<void> {
 
@@ -128,21 +133,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
     });
 
-    /*INPUT ASSINATURA */
-    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
-    SignatureBtn.addEventListener('click', (e) => {
-   
-      this.GetAssinatura();
-   
-    });
-   
-    /*BTN MODAL */
-    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
-    BtnCadastrarAssinatura.addEventListener('click', (e) => {
-      this.UploadDadosAssinatura();
-    
-    });
-   
     /*BOTAO VOLTAR*/
     let BtnFormularioCancelar = (<HTMLButtonElement>document.getElementById('btnCancelar'));
     BtnFormularioCancelar.addEventListener('click', (e) => {
@@ -150,6 +140,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       location.reload();
    
     });
+
 
   }
 
@@ -207,9 +198,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
-    var DataArrumada = this.func.FormtDataAssinatura();
-    let inputDataAss: HTMLInputElement = <HTMLInputElement>document.getElementById("inputDataAss");
-    inputDataAss.value = DataArrumada;
   }
 
   //Table
@@ -448,9 +436,9 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let inputEstabelecimento = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
     let inputLotacao = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
     //ESTADO DATA ASSINATURA
-    let SelectEstado = (<HTMLSelectElement>document.getElementById('inputEstado')).value;
-    let inputDataAss = (<HTMLInputElement>document.getElementById('inputDataAss')).value;
-    let BtnAssinatura = (<HTMLButtonElement>document.getElementById('ActionAss')).textContent;
+    let SelectEstado = "Estado por Impressão";
+    let inputDataAss = "@@";
+    let BtnAssinatura = "@@";
     //BENEFICIARIOS
     let contador = document.querySelectorAll('.itemGlo');
     
@@ -518,17 +506,38 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         
           if(validationPorcentagem != true)
             return console.log("Erro de validação da porcentagem!");
-        
-        if (ID == null || ID == 0 || ID === undefined) 
-        {
-            this.Gravar();
-            this.modal.ModalLoad();
-        } 
-        else 
-        {
-            this.Gravar(ID);
-            this.modal.ModalLoad();
-        }
+    
+ 
+            const myinput = document.getElementById('paper');
+            console.log(myinput);
+            html2canvas(myinput,{
+              foreignObjectRendering:true,
+              removeContainer:true,
+            })  
+              .then((canvas) => {  
+                var imgWidth = 200;  
+                var pageHeight = 290;  
+                var imgHeight = canvas.height * imgWidth / canvas.width;  
+                var heightLeft = imgHeight;  
+                const imgData = canvas.toDataURL('image/png');  
+                const mynewpdf = new jsPDF();  
+                var position = 0;  
+                mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
+                mynewpdf.save("mypdf.pdf");  
+  
+            });
+              
+
+      //  if (ID == null || ID == 0 || ID === undefined) 
+      //   {
+      //       this.Gravar();
+      //       this.modal.ModalLoad();
+      //   } 
+      //   else 
+      //   {
+      //       this.Gravar(ID);
+      //       this.modal.ModalLoad();
+      //   }
 
       } 
       catch (error) {
@@ -551,9 +560,9 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let ValueEstabelecimento = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
     let ValueLotacao = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
     //ESTADO DATA ASSINATURA
-    let ValueEstado = (<HTMLSelectElement>document.getElementById('inputEstado')).value;
-    let ValueDataAss = (<HTMLInputElement>document.getElementById('inputDataAss')).value;
-    let ValueAssinatura = (<HTMLButtonElement>document.getElementById('ActionAss')).textContent;
+    let ValueEstado = "Estado por impressão";
+    let ValueDataAss = "Assinatura realizada por impressão.";
+    let ValueAssinatura = "Assinatura realizada por impressão.";
     let login = (<HTMLInputElement>document.querySelector('.divNome')).id.split('_')[1];
     const newCadSegurado: ICadSeguradoListItem = <ICadSeguradoListItem>{
       Nome: ValueNome,

@@ -17,8 +17,8 @@ export class FormularioComponent {
                 depend += dinamico;
 
         }
-        let htmlForm: string = `<div class="paper">
-        <div>
+        let htmlForm: string = `<div class="paper" >
+        <div class="canvas_div_pdf" id="paper">
           <div class="form-header row justify-content-between">
             <div class="form-header-logo col-lg-2 col-md-12">
                 <img src="../SiteAssets/logo-Firjan.png" alt="Logo">
@@ -121,54 +121,21 @@ export class FormularioComponent {
                   </ul>
               </fieldset>
               <!-- Assinatura -->
-              <fieldset>
-                  <legend>Assinatura</legend>
-                  <div class="form-row">
-                      <div class="form-group col-md-3">
-                          <div>
-                              <label for="inputEstado">Estado</label>
-                              <select id="inputEstado" class="form-control form-control-sm">
-                                  <option selected>-</option>
-                                  <option>Acre (AC)</option>
-                                  <option>Alagoas (AL)</option>
-                                  <option>Amapá (AP)</option>
-                                  <option>Amazonas (AM)</option>
-                                  <option>Bahia (BA)</option>
-                                  <option>Ceará (CE)</option>
-                                  <option>Distrito Federal (DF)</option>
-                                  <option>Espírito Santo (ES)</option>
-                                  <option>Goiás (GO)</option>
-                                  <option>Maranhão (MA)</option>
-                                  <option>Mato Grosso (MT)</option>
-                                  <option>Mato Grosso do Sul (MS)</option>
-                                  <option>Minas Gerais (MG)</option>
-                                  <option>Pará (PA)</option>
-                                  <option>Paraíba (PB)</option>
-                                  <option>Paraná (PR)</option>
-                                  <option>Pernambuco (PE)</option>
-                                  <option>Piauí (PI)</option>
-                                  <option>Rio de Janeiro (RJ)</option>
-                                  <option>Rio Grande do Norte (RN)</option>
-                                  <option>Rio Grande do Sul (RS)</option>
-                                  <option>Rondônia (RO)</option>
-                                  <option>Roraima (RR)</option>
-                                  <option>Santa Catarina (SC)</option>
-                                  <option>São Paulo (SP)</option>
-                                  <option>Sergipe (SE)</option>
-                                  <option>Tocantins (TO)</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group col-md-3" id="signature">
-                          <label for="inputDataAss">Data</label>
-                          <input type="text" class="form-control form-control-sm" id="inputDataAss" readonly>
-                      </div>
-                      <div class="form-group col-md-6">
-                          <label for="inputAss">Assinatura</label>
-                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss"></buttom>
-                      </div>
-                  </div>
-              </fieldset>
+              
+
+              <label class="ml-label"></label>
+              <p class="dataAss">Rio de Janeiro (RJ), ${this.FormtDataAssinatura()}</p>
+              <div class="dataAss" style="text-align: center;">
+              </div>
+              </br>
+              </br>
+              </br>
+              <hr style="width: 500px;">
+              <p class="nomeAss" style="text-align: center;">Assinatura</p>
+              <table class="dataAss">
+              </table>
+
+
                 <div class="row">
                     <div class="col-md-6">
                         <button type="button" class="btn btn-primary" id="btnCancelar" style="background-color: #393230 !important; border-color: #393230;">Voltar</button>
@@ -179,33 +146,8 @@ export class FormularioComponent {
                 </div>
           </form>
           </div>
-       </div>
-      
-      <div class="modal fade" id="ModalUploadAssinatura" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3 class="modal-title" id="staticBackdropLabel" style="width: 100%; text-align: center;color: black;">Cadastro de assinatura eletrônica</h3>
-            </div>
-            <div class="modal-body">
-              <div style="text-align: center; margin: 0 px 20px; color: black; font-size:18px">
-                <p id="NameModal"> </p>
-                <p id="EmailModal"> </p>
-              </div>
-              <div style="text-align: center; color: black; margin-bottom:10px;">
-                <p >Faça o upload da imagem para ser usado como sua assinatura digital<p>
-              </div>
-                
-            <input type="file" id="formFile" style="width: 100%;border: 1px solid #ced4da;border-radius: 0.25rem; color: black;">
-            <label for="formFile" class="form-label" style="font-size: smaller; color: black;">*assinatura deve ser feita em um papel branco com caneta de cor azul ou preta</label>
           </div>
-        <div class="modal-footer" style="justify-content: center;">
-         
-          <button type="button" class="btn" style="color: #fff; background-color: #003BD1; border-color: #003BD1;" id="BtnCadastrar">Cadastrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
     `;
 
         return htmlForm;
@@ -434,4 +376,57 @@ export class FormularioComponent {
 
         return htmlForm;
     }
+
+    public FormtDataAssinatura() {
+        let Ajustemes: string;
+        var data = new Date();
+        var dia = data.getDate();
+        var mes = data.getMonth();
+        var ano = data.getFullYear();
+        Arrumadata(mes);
+    
+        function Arrumadata(idMes: number): void {
+    
+          switch (idMes) {
+            case 0:
+              Ajustemes = "Janeiro";
+              break;
+            case 1:
+              Ajustemes = "Fevereiro";
+              break;
+            case 2:
+              Ajustemes = "Março";
+              break;
+            case 3:
+              Ajustemes = "Abril";
+              break;
+            case 4:
+              Ajustemes = "Maio";
+              break;
+            case 5:
+              Ajustemes = "Junho";
+              break;
+            case 6:
+              Ajustemes = "Julho";
+              break;
+            case 7:
+              Ajustemes = "Agosto";
+              break;
+            case 8:
+              Ajustemes = "Setembro";
+              break;
+            case 9:
+              Ajustemes = "Outubro";
+              break;
+            case 10:
+              Ajustemes = "Novembro";
+              break;
+            default:
+              Ajustemes = "Dezembro";
+              break;
+          }
+        }
+        var AssData = dia + ' de ' + Ajustemes + ' de ' + ano;
+        return AssData;
+      }
 }
