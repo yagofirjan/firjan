@@ -141,6 +141,42 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
    
     });
 
+    //Botao Imprimir
+
+    let BtnFormularioPrint = (<HTMLButtonElement>document.getElementById('btnPrintDoc'));
+    BtnFormularioPrint.addEventListener('click', (e) => {
+
+      let Pave = this.formulario.htmlFormPrint();
+      $(".modalteste").append(Pave);
+      $(".modalteste").show();
+      $(".paper").hide();
+  
+      //pdf formulario 
+      const myinput = document.getElementById('paperFormPrint');
+        console.log(myinput);
+        html2canvas(myinput,{
+        foreignObjectRendering:false,
+        removeContainer:true,
+        })  
+          .then((canvas) => {  
+            var imgWidth = 200;  
+            var pageHeight = 290;  
+            var imgHeight = canvas.height * imgWidth / canvas.width;  
+            var heightLeft = imgHeight;  
+            const imgData = canvas.toDataURL('image/png');  
+            const mynewpdf = new jsPDF( 'p','mm','a4');  
+            // const mynewpdf = new jsPDF();  
+              var position = 0;  
+              // mynewpdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);  
+              mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
+              mynewpdf.save("mypdf.pdf");  
+    
+            });
+      $(".paper").show();
+      $(".modalteste").hide();
+      $(".modalteste").empty();
+
+    });
 
   }
 
@@ -507,27 +543,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
           if(validationPorcentagem != true)
             return console.log("Erro de validação da porcentagem!");
     
- 
-            const myinput = document.getElementById('paper');
-            console.log(myinput);
-            html2canvas(myinput,{
-              foreignObjectRendering:true,
-              removeContainer:true,
-            })  
-              .then((canvas) => {  
-                var imgWidth = 200;  
-                var pageHeight = 290;  
-                var imgHeight = canvas.height * imgWidth / canvas.width;  
-                var heightLeft = imgHeight;  
-                const imgData = canvas.toDataURL('image/png');  
-                const mynewpdf = new jsPDF();  
-                var position = 0;  
-                mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
-                mynewpdf.save("mypdf.pdf");  
-  
-            });
-              
-
+      //salvar dados       
       //  if (ID == null || ID == 0 || ID === undefined) 
       //   {
       //       this.Gravar();
@@ -596,6 +612,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
+  
   private async BuscaIDSeguradoSalvo() {
     const UserName = this.context.pageContext.user.displayName;
     await this.ConsultaCadSeguradoService.getLastBySegurado(UserName)

@@ -11,6 +11,31 @@ label {
     color: black;
 }
 
+.benfdivdatabox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.benfdivdata p {
+    border: 1px solid #ccc;
+    color: #495057;
+    font-weight: 400;
+    padding: 5px;
+    border-radius: 0.2rem;
+    margin: 0;
+}
+
+.paperFormPrint {
+    padding: 25px;
+    background-color: #ffff;
+    box-shadow: 0 0 1em black;
+    color: black;
+}
+
 .form-header {
     display: flex;
     align-items: center;

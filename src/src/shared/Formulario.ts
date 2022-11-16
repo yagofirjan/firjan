@@ -137,16 +137,20 @@ export class FormularioComponent {
 
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <button type="button" class="btn btn-primary" id="btnCancelar" style="background-color: #393230 !important; border-color: #393230;">Voltar</button>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4" style="display: flex; flex-direction: row; justify-content: center;">
+                        <button type="button" class="btn btn-primary" id="btnPrintDoc"; >Imprimir</button>
+                    </div>
+                    <div class="col-md-4">
                         <buttom type="button" class="btn btn-primary" id="btnSalvar" style="float: right;">Concluir e Enviar</buttom>
                     </div>
                 </div>
           </form>
           </div>
           </div>
+          <div class="modalteste" style="display: none"></div>
 
     `;
 
@@ -429,4 +433,198 @@ export class FormularioComponent {
         var AssData = dia + ' de ' + Ajustemes + ' de ' + ano;
         return AssData;
       }
+
+          //FormPrint
+
+    public  htmlFormPrint() {
+        //SEGURADO
+        let inputNomeValuePrint= (<HTMLInputElement>document.getElementById('inputName')).value;
+        let inputCPFValuePrint = (<HTMLInputElement>document.getElementById('inputCpf')).value;
+        let inputDataNascimentoValuePrint = (<HTMLInputElement>document.getElementById('inputData')).value;
+        let inputMatriculaValuePrint = (<HTMLInputElement>document.getElementById('inputMatricula')).value;
+        //EMPRESA
+        let inputEmpresaValuePrint = (<HTMLInputElement>document.getElementById('inputEmpresa')).value;
+        let inputEstabelecimentoValuePrint = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
+        let inputLotacaoValuePrint = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
+
+        console.log("teste modal");
+        // let ValueNomePrint3 = (<HTMLInputElement>document.getElementById('inputName')).value;
+        let contadorPrint = document.querySelectorAll('.itemGlo');
+        var benfhtml = "";
+
+        for (var i = 0; i < contadorPrint.length; i++) {
+          var id = contadorPrint[i].id.split('_')[1]; 
+        //   let ValueBenfPrint3 = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
+
+        //Beneficiarios
+          let inputNomeBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
+          let inputCPFBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputCPFBenf' + id)).value;
+          let inputDataNascimentoBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputDataBenf' + id)).value;
+          let inputTelefoneBaneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputTelefoneBenf' + id)).value;
+          let inputParentescoBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputParentescoBenf' + id)).value;
+          let inputPorcentagemValuePrint = (<HTMLInputElement>document.getElementById('inputPorcentagemBenf' + id)).value;
+
+
+          benfhtml += `
+          <div class="benfdivdatabox">
+          <div class="benfdivdata">
+              <label>Nome beneficiário</label>
+              <p style="width: 500px;">${inputNomeBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>CPF</label>
+              <p style="width: 110px;">${inputCPFBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>Nascimento</label>
+              <p style="width: 90px;">${inputDataNascimentoBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>Parentesco</label>
+              <p style="width: 100px;">${inputParentescoBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+          <label>Telefone</label>
+          <p style="width: 115px;">${inputTelefoneBaneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label> %</label>
+              <p style="width: 45px;">${inputPorcentagemValuePrint}</p>
+          </div>
+        </div>`;
+
+        }
+        let htmlFormPrint: string = `     <div class="paperFormPrint">
+        <div class="canvas_div_pdf" id="paperFormPrint">
+            <div class="form-header row justify-content-between">
+                <div class="form-header-logo col-lg-2 col-md-12">
+                    <img src="../SiteAssets/logo-Firjan.png" alt="Logo">
+                </div>
+                <div class="form-header-title col-lg-9 col-md-12">
+                    <h1 class="Htitle">Termo de Nomeação de Beneficiários Seguro de Vida de Pessoas</h1>
+                </div>
+            </div>
+            <form id="FormularioSVP" name="FormularioSVP">
+                <!-- Segurado -->
+                <fieldset>
+                    <legend>Dados do Segurado</legend>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 divNome">
+                            <label for="inputName">Nome completo</label>
+                            <p class="form-control form-control-sm">${inputNomeValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputCpf">CPF</label>
+                            <p class="CPF form-control form-control-sm">${inputCPFValuePrint}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputData">Data de nascimento</label>
+                            <p class="Date form-control form-control-sm">${inputDataNascimentoValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputMatricula">Matrícula</label>
+                            <p class="form-control form-control-sm">${inputMatriculaValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputLotacao">Lotação</label>
+                            <p class="form-control form-control-sm">${inputLotacaoValuePrint}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmpresa">Empresa</label>
+                            <p class="form-control form-control-sm">${inputEmpresaValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEstabelecimento">Estabelecimento</label>
+                            <p class="form-control form-control-sm">${inputEstabelecimentoValuePrint}</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Termo -->
+                <div class="controler-text">
+                    <p><b>Na qualidade de segurado da apólice contratada pela Entidade para seus empregados, nomeio por
+                            este termo que vai por mim assinado, como meus beneficiários, as pessoas abaixo
+                            indicadas:</b></p>
+                </div>
+                <!-- beneficiarios -->
+                <fieldset>
+                    <legend>Dados dos Beneficiários</legend>
+                    <div >
+                        <!-- conteudo dinamico -->
+                        ${benfhtml}
+
+                        <!-- conteudo dinamico -->
+                    </div>
+                </fieldset>
+                <!-- Avisos -->
+                <fieldset>
+                    <legend>Dados Importantes</legend>
+                    <ul class="myUl">
+                        <li>Os Titulares do seguro deverão manifestar livremente sua vontade na indicação de seus
+                            beneficiários, podendo indicar qualquer pessoa como beneficiário, e não somente os
+                            dependentes legais, conforme legislação aplicável;
+                        </li>
+                        <li>Para segurado maior de 16 anos e menor de 18 anos, a assinatura deverá ser em conjunto com
+                            seu representante legal, e se menor de 16 anos, até o limite de 14 anos, a assinatura deverá
+                            ser somente do seu
+                            representante legal. Para ambos os casos será necessário o envio de uma cópia do RG e CPF do
+                            representante
+                            legal, junto com a certidão de nascimento e/ou documento legal que comprove a
+                            responsabilidade
+                            sobre o menor</li>
+                        <li>Caso o segurado se encontre impossibilitado, ou não saiba assinar, deverá ser colhida sua
+                            impressão digital e a assinatura de um representante (assinatura a rogo). é recomendado o
+                            reconhecimento de firma do representante e de duas testemunhas. Se o proponente for
+                            analfabeto ou legalmente incapaz aceitaremos com devido reconhecimento de firma, outra
+                            impossibilidade não daria causa a mudança de beneficiários.
+                            Também deverá ser
+                            encaminhada cópia de um documento de identificação que sirva de comprovação da assinatura do
+                            representante.</li>
+                        <li>Deverão ser preenchidos todos os campos do formulário, inclusive o percentual de
+                            participação de
+                            cada beneficiário;</li>
+                        <li>No preenchimento incorreto ou incompleto do formulário, este não acatado e serão mantidos os
+                            beneficiários indicados anteriormente. Caso ainda não tenham sido indicados, os
+                            beneficiários
+                            serão definidos pela legislação vigente na data do evento;</li>
+                        <li>Na falta de indicação de beneficiário (s), a indenização do seguro será para de acordo com a
+                            legislação vigente
+                        </li>
+                        <li>Em caso de óbito a família deverá informar à GRB - Gerência de Remuneração e Benefícios.
+                        </li>
+                        <li>Concordo e reconheço como válida a anuência aos termos ora acordados em formato eletrônico,
+                            ainda que eu não utilize de certificado digital emitido no padrão ICP-Brasil, admitindo-o
+                            como válido para todos os fins, nos termos da Medida Provisória nº 2.200-2/2001. Declaro
+                            para todos os fins, que esta formalização eletrônica é suficiente para a comprovação da
+                            minha autoria, integridade, validade e vinculação ao presente instrumento.</li>
+                    </ul>
+                </fieldset>
+                <!-- Assinatura -->
+
+                <label class="ml-label"></label>
+                <p class="dataAss">Rio de Janeiro (RJ), ${this.FormtDataAssinatura()}</p>
+                <div class="dataAss" style="text-align: center;">
+                </div>
+                </br>
+                </br>
+                </br>
+                <hr style="width: 500px;">
+                <p class="nomeAss" style="text-align: center;">Assinatura</p>
+                <table class="dataAss">
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+
+
+
+    `;
+
+        return htmlFormPrint;
+    }
 }
