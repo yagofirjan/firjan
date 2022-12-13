@@ -2,6 +2,7 @@ import 'bootstrap';
 import { SPHttpClient } from '@microsoft/sp-http';
 import * as $ from 'jquery';
 import styles from '../webparts/formularioSvp/FormularioSvpWebPart.module.scss';
+import { Item } from 'sp-pnp-js';
 require('../../node_modules/bootstrap/dist/css/bootstrap.min.css');
 
 export class TableFormularioComponent {
@@ -37,18 +38,23 @@ export class TableFormularioComponent {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #393230 !important; border-color: #393230;">Voltar</button>
+                        <button type="button" class="btn btn-primary" id="btnPrintAlteracoes"; >Imprimir</button>
                         <button type="button" class="btn btn-primary" id="SalvarAlteracoes" style="float: right;">Salvar Alterações</button>
                     </div>
                 </div>
             </div>
-        </div>`;
+            
+        </div>
+        <div class="paperprint" style="display: none"></div>
+        
+        `;
         return htmlTable;
 
 
     }
 
     public htmlTablePopuladoPendente(Segurado: any, Beneficiario: any){
-        
+
         let depend: string = "";
         for (var i = 0; i < Beneficiario.length; i++) {
                 var dinamico = this.htmlTableBeneficiariosPendente(Beneficiario[i]);
@@ -177,14 +183,16 @@ export class TableFormularioComponent {
                           <input type="text" class="form-control form-control-sm" id="inputDataAss" value="${Segurado.DataAssinatura}" disabled>
                       </div>
                       <div class="form-group col-md-6">
-                          <label for="inputAss">Assinatura</label>
-                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss1set" style="background-color: #e9ecef;" disabled>${Segurado.Assinatura}<buttom>
-                      </div>
+                      <label for="inputAss">Assinatura</label>
+                      <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss1set" style="background-color: #e9ecef;" disabled>${Segurado.Assinatura}<buttom>
+                  </div>
                   </div>
               </fieldset>
           </form>
           </div>
-       </div>`;
+       </div>
+
+       `;
 
                 return htmlbenf;
     }
@@ -205,7 +213,7 @@ export class TableFormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.ID}" value="${DataDepend.DataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
-            <label for="inputParentescoBenf${DataDepend.ID}">Parentesco</label>
+            <label for="inputParentescoBenf${DataDepend.ID}">Afinidade</label>
             <input type="text" class="GrauParentesco form-control form-control-sm" id="inputParentescoBenf${DataDepend.ID}" value="${DataDepend.Parentesco}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -231,6 +239,8 @@ export class TableFormularioComponent {
                 depend += dinamico;
 
         }
+
+
         let htmlbenf = `<div class="paper" id="paper">
         <div>
           <div class="form-header row justify-content-between">
@@ -343,7 +353,7 @@ export class TableFormularioComponent {
               <fieldset>
                   <legend>Assinatura</legend>
                   <div class="form-row">
-                      <div class="form-group col-md-3">
+                      <div class="form-group col-md-6">
                           <div>
                               <label for="inputEstado">Estado</label>
                               <select id="inputEstado" class="form-control form-control-sm"  >
@@ -378,17 +388,31 @@ export class TableFormularioComponent {
                               </select>
                           </div>
                       </div>
-                      <div class="form-group col-md-3" id="signature">
+                      <div class="form-group col-md-6" id="signature">
                           <label for="inputDataAss">Data</label>
                           <input type="text" class="form-control form-control-sm" id="inputDataAss" value="" disabled>
-                      </div>
-                      <div class="form-group col-md-6">
-                          <label for="inputAss">Assinatura</label>
-                          <buttom type="button" class="BtnAss form-control form-control-sm" id="ActionAss" value=""><buttom>
                       </div>
                       
                   </div>
               </fieldset>
+              <fieldset>
+              <div class="form-row">
+                  <div class="form-group col-md-12">
+                      <p>
+                          <b>Necessário efetuar o download do formulário, clicando no botão "Imprimir" para assinatura do documento. O mesmo poderá conter a assinatura de próprio punho ou utilizando a assinatura eletrônica do
+                          <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> gov.br <a> através do endereço 
+                          <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> https://www.gov.br/governodigital/pt-br/assinatura-eletronica<a>.</b><br />
+                          <b> Após o documento ter sido assinado clicar no botão "Escolher arquivos" para o upload do documento com a assinatura.</b><br />
+                      </p>
+                  </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-12">
+                      <input type="file" id="InputFileDocs" multiple="multiple"/>
+                      <div id="fileList" class="file-list"></div>
+                  </div>
+              </div>
+         </fieldset>
           </form>
           </div>
        </div>`;
@@ -450,7 +474,7 @@ export class TableFormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.ID}" value="${DataDepend.DataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
-            <label for="inputParentescoBenf${DataDepend.codDependente}">Parentesco</label>
+            <label for="inputParentescoBenf${DataDepend.codDependente}">Afinidade</label>
             ${depend}
         </div>
         <div class="form-group col-lg-2 col-md-12">
@@ -492,7 +516,7 @@ export class TableFormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${cont}">
         </div>
         <div class="form-group col-lg-2 col-md-12" id="inputParentescoBenfSelect${cont}">
-            <label for="inputParentescoBenf${cont}">Parentesco</label>
+            <label for="inputParentescoBenf${cont}">Afinidade</label>
             <select id="inputParentescoBenf${cont}" class="form-control form-control-sm dropdonw">
                         <option>-</option>
                         <option>Avós</option>
@@ -535,6 +559,8 @@ export class TableFormularioComponent {
 
         let HtmlItensTable: string = "";
         let pendencia: number = 0;
+        let arr: any = item.AttachmentFiles;
+        let newarrVR = arr[arr.length - 1];
 
         if (item.Status == "Pendente") {
             pendencia += 1;
@@ -548,6 +574,14 @@ export class TableFormularioComponent {
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                     </svg>
                                   </button>
+                                  
+                                  <a href="${newURL}${newarrVR.ServerRelativeUrl}" target="_blank">
+                                  <button  class="${styles.BtnOptionsPdf} OptionsPdf" title="PDF Solicitação" id="AuxCreOptionsPdf${item.ID}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                                      <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
+                                    </svg>
+                                  </button>
+                                  </a>
                                   </td>
                                 </tr>`;
 
@@ -576,15 +610,15 @@ export class TableFormularioComponent {
 
           }
           if (item.Status == "Aprovado") {
-            let arr: any = item.AttachmentFiles;
-            let newarrVR = arr[arr.length - 1];
+            let arrsvp: any = item.AttachmentFiles;
+            let newarrSVP = arrsvp[arrsvp.length - 1];
 
             HtmlItensTable += `<tr id="VR${item.ID}">
                             <td class="${styles.tbtd}">${this.Title}</td>
                             <td class="${styles.tbtd}">${item.DataAssinatura}</td>
                             <td class="${styles.tbtd}">${item.Status}</td>
                             <td class="${styles.tbtd}" id="TdOptions">
-                            <a href="${newURL}${newarrVR.ServerRelativeUrl}" target="_blank">
+                            <a href="${newURL}${newarrSVP.ServerRelativeUrl}" target="_blank">
                               <button  class="${styles.BtnOptionsPdf} OptionsPdf" title="PDF Solicitação" id="AuxCreOptionsPdf${item.ID}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
                                   <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
@@ -611,4 +645,197 @@ export class TableFormularioComponent {
 
      return pendencia;
     }
+
+    //formprint
+
+    public  htmlFormPrint() {
+        //SEGURADO
+        let inputNomeValuePrint= (<HTMLInputElement>document.getElementById('inputName')).value;
+        let inputCPFValuePrint = (<HTMLInputElement>document.getElementById('inputCpf')).value;
+        let inputDataNascimentoValuePrint = (<HTMLInputElement>document.getElementById('inputData')).value;
+        let inputMatriculaValuePrint = (<HTMLInputElement>document.getElementById('inputMatricula')).value;
+        let SelectEstadoValuePrint = (<HTMLInputElement>document.getElementById('inputEstado')).value;
+
+        //EMPRESA
+        let inputEmpresaValuePrint = (<HTMLInputElement>document.getElementById('inputEmpresa')).value;
+        let inputEstabelecimentoValuePrint = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
+        let inputLotacaoValuePrint = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
+
+        let contadorPrint = document.querySelectorAll('.itemGlo');
+        var benfhtml = "";
+
+        for (var i = 0; i < contadorPrint.length; i++) {
+          var id = contadorPrint[i].id.split('_')[1]; 
+
+        //Beneficiarios
+          let inputNomeBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
+          let inputCPFBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputCPFBenf' + id)).value;
+          let inputDataNascimentoBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputDataBenf' + id)).value;
+          let inputTelefoneBaneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputTelefoneBenf' + id)).value;
+          let inputParentescoBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputParentescoBenf' + id)).value;
+          let inputPorcentagemValuePrint = (<HTMLInputElement>document.getElementById('inputPorcentagemBenf' + id)).value;
+
+
+          benfhtml += `
+          <div class="benfdivdatabox">
+          <div class="benfdivdata">
+              <label>Nome beneficiário</label>
+              <p style="width: 500px;">${inputNomeBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>CPF</label>
+              <p style="width: 110px;">${inputCPFBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>Nascimento</label>
+              <p style="width: 90px;">${inputDataNascimentoBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label>Afinidade</label>
+              <p style="width: 100px;">${inputParentescoBeneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+          <label>Telefone</label>
+          <p style="width: 115px;">${inputTelefoneBaneficiarioValuePrint}</p>
+          </div>
+          <div class="benfdivdata">
+              <label> %</label>
+              <p style="width: 45px;">${inputPorcentagemValuePrint}</p>
+          </div>
+        </div>`;
+
+        }
+        let htmlFormPrint: string = `     <div class="paperFormPrint">
+        <div class="canvas_div_pdf" id="paperFormPrint">
+            <div class="form-header row justify-content-between">
+                <div class="form-header-logo col-lg-2 col-md-12">
+                    <img src="../SiteAssets/logo-Firjan.png" alt="Logo">
+                </div>
+                <div class="form-header-title col-lg-9 col-md-12">
+                    <h1 class="Htitle">Termo de Nomeação de Beneficiários Seguro de Vida de Pessoas</h1>
+                </div>
+            </div>
+            <form id="FormularioSVP" name="FormularioSVP">
+                <!-- Segurado -->
+                <fieldset>
+                    <legend>Dados do Segurado</legend>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 divNome">
+                            <label for="inputName">Nome completo</label>
+                            <p class="form-control form-control-sm">${inputNomeValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputCpf">CPF</label>
+                            <p class="CPF form-control form-control-sm">${inputCPFValuePrint}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="inputData">Data de nascimento</label>
+                            <p class="Date form-control form-control-sm">${inputDataNascimentoValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputMatricula">Matrícula</label>
+                            <p class="form-control form-control-sm">${inputMatriculaValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputLotacao">Lotação</label>
+                            <p class="form-control form-control-sm">${inputLotacaoValuePrint}</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmpresa">Empresa</label>
+                            <p class="form-control form-control-sm">${inputEmpresaValuePrint}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEstabelecimento">Estabelecimento</label>
+                            <p class="form-control form-control-sm">${inputEstabelecimentoValuePrint}</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Termo -->
+                <div class="controler-text">
+                    <p><b>Na qualidade de segurado da apólice contratada pela Entidade para seus empregados, nomeio por
+                            este termo que vai por mim assinado, como meus beneficiários, as pessoas abaixo
+                            indicadas:</b></p>
+                </div>
+                <!-- beneficiarios -->
+                <fieldset>
+                    <legend>Dados dos Beneficiários</legend>
+                    <div >
+                        <!-- conteudo dinamico -->
+                        ${benfhtml}
+                        <!-- conteudo dinamico -->
+                    </div>
+                </fieldset>
+                <!-- Avisos -->
+                <fieldset>
+                    <legend>Dados Importantes</legend>
+                    <ul class="myUl">
+                        <li>Os Titulares do seguro deverão manifestar livremente sua vontade na indicação de seus
+                            beneficiários, podendo indicar qualquer pessoa como beneficiário, e não somente os
+                            dependentes legais, conforme legislação aplicável;
+                        </li>
+                        <li>Para segurado maior de 16 anos e menor de 18 anos, a assinatura deverá ser em conjunto com
+                            seu representante legal, e se menor de 16 anos, até o limite de 14 anos, a assinatura deverá
+                            ser somente do seu
+                            representante legal. Para ambos os casos será necessário o envio de uma cópia do RG e CPF do
+                            representante
+                            legal, junto com a certidão de nascimento e/ou documento legal que comprove a
+                            responsabilidade
+                            sobre o menor</li>
+                        <li>Caso o segurado se encontre impossibilitado, ou não saiba assinar, deverá ser colhida sua
+                            impressão digital e a assinatura de um representante (assinatura a rogo). é recomendado o
+                            reconhecimento de firma do representante e de duas testemunhas. Se o proponente for
+                            analfabeto ou legalmente incapaz aceitaremos com devido reconhecimento de firma, outra
+                            impossibilidade não daria causa a mudança de beneficiários.
+                            Também deverá ser
+                            encaminhada cópia de um documento de identificação que sirva de comprovação da assinatura do
+                            representante.</li>
+                        <li>Deverão ser preenchidos todos os campos do formulário, inclusive o percentual de
+                            participação de
+                            cada beneficiário;</li>
+                        <li>No preenchimento incorreto ou incompleto do formulário, este não acatado e serão mantidos os
+                            beneficiários indicados anteriormente. Caso ainda não tenham sido indicados, os
+                            beneficiários
+                            serão definidos pela legislação vigente na data do evento;</li>
+                        <li>Na falta de indicação de beneficiário (s), a indenização do seguro será para de acordo com a
+                            legislação vigente
+                        </li>
+                        <li>Em caso de óbito a família deverá informar à GRB - Gerência de Remuneração e Benefícios.
+                        </li>
+                        <li>Concordo e reconheço como válida a anuência aos termos ora acordados em formato eletrônico,
+                            ainda que eu não utilize de certificado digital emitido no padrão ICP-Brasil, admitindo-o
+                            como válido para todos os fins, nos termos da Medida Provisória nº 2.200-2/2001. Declaro
+                            para todos os fins, que esta formalização eletrônica é suficiente para a comprovação da
+                            minha autoria, integridade, validade e vinculação ao presente instrumento.</li>
+                    </ul>
+                </fieldset>
+                <!-- Assinatura -->
+
+                <label class="ml-label"></label>
+                <p class="dataAss">${SelectEstadoValuePrint} </p>
+                <div class="dataAss" style="text-align: center;">
+                </div>
+                </br>
+                </br>
+                </br>
+                <hr style="width: 500px;">
+                <p class="nomeAss" style="text-align: center;">Assinatura</p>
+                <table class="dataAss">
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+
+
+
+    `;
+
+        return htmlFormPrint;
+    }
+
 }

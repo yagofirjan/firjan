@@ -190,6 +190,14 @@ export class Funcomponent {
       
   }
 
+  public async ValidaFile(file: any){
+    if (file == undefined || file == null)
+    {
+      return this.ModalCustom("É necessário anexar o formulário assinado.");
+    }
+    return true;
+  }
+
   public _creatEventTable() {
 
     let searchInput = (<HTMLInputElement>document.getElementById("myInput"));

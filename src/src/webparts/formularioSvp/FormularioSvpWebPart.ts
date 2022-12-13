@@ -30,6 +30,7 @@ export interface IFormularioSvpWebPartProps {
 }
 
 export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormularioSvpWebPartProps> {
+  public fileInfos = [];
   private ordersClient: AadHttpClient; 
   public segurados = [];
   private ConsultaCadSeguradoService: CadSeguradoService;
@@ -68,6 +69,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
   private HTMLRenderForm: HTMLElement; /*ID RenderForm*/
   private HTMLRenderTable: HTMLElement; /*ID RenderTable*/
   private HTMLTableItens: HTMLElement; /*ID TableTR*/
+  private HTMLTableItensAttach: HTMLElement; /*ID HTMLTableItensAttach*/
 
   public render(): void {
     try {
@@ -110,26 +112,38 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     Swal.close();
   }
 
+
+
   private LoadEventForm() {
 
     /*BTN DO FORMULARIO */
     let BtnFormulario = (<HTMLButtonElement>document.getElementById('btnSalvar'));
     BtnFormulario.addEventListener('click', (e) => {
-
-      this.ValidaCamposForm();
-
+      // console.log("botao salvar acionado");
+      this.ValidaCampoFile();
+      
     });
     /*BOTAO ADICIONA BENEFICIARIO*/
     let newbenf = document.getElementById('BenfSec'); //area
     let addbenf = document.getElementById('addbenf');//btn
+
     var cont: number = 0;
     let htmlbenf = '';
     addbenf.addEventListener('click', (e) => {
-     
-      cont = cont + 90;
-      htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
-      newbenf.insertAdjacentHTML('beforeend', htmlbenf);
-      this.LoadCamposForm();
+      let qtdbenf = document.querySelectorAll('.itemGlo').length;
+      // console.log("testedecontador:  " + qtdbenf);
+
+      if(qtdbenf < 10) { 
+        // console.log("contou" + qtdbenf);
+        htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
+        newbenf.insertAdjacentHTML('beforeend', htmlbenf);
+        this.LoadCamposForm();
+
+      }else{
+        // console.log("barrou" + qtdbenf);
+        this.modal.ModalCustomAlert('Somente 10 beneficiários são permitidos.');
+      }
+
 
     });
 
@@ -141,46 +155,69 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
    
     });
 
+    //Botao Inputfiles
+    let SetInputFile = (<HTMLInputElement>document.getElementById('InputFileDocs'));
+    SetInputFile.addEventListener('change', (e) => {
+
+      this.blobEdit();
+      this._eventAttach();
+    });
+
+
     //Botao Imprimir
-
     let BtnFormularioPrint = (<HTMLButtonElement>document.getElementById('btnPrintDoc'));
-    BtnFormularioPrint.addEventListener('click', (e) => {
+    BtnFormularioPrint.addEventListener('click', async (e) => {
+      await this.ValidaCamposForm() 
+      .then(async (validaResultado:any) => {
+        if (validaResultado == "Validado") 
+        {
+          let FormCanvas = this.formulario.htmlFormPrint();
+          $(".paperprint").append(FormCanvas);
+          $(".paperprint").show();
+          $(".paper").hide();
 
-      let Pave = this.formulario.htmlFormPrint();
-      $(".modalteste").append(Pave);
-      $(".modalteste").show();
-      $(".paper").hide();
-  
-      //pdf formulario 
-      const myinput = document.getElementById('paperFormPrint');
-        console.log(myinput);
-        html2canvas(myinput,{
-        foreignObjectRendering:false,
-        removeContainer:true,
-        })  
-          .then((canvas) => {  
-            var imgWidth = 200;  
-            var pageHeight = 290;  
-            var imgHeight = canvas.height * imgWidth / canvas.width;  
-            var heightLeft = imgHeight;  
-            const imgData = canvas.toDataURL('image/png');  
-            const mynewpdf = new jsPDF( 'p','mm','a4');  
-            // const mynewpdf = new jsPDF();  
-              var position = 0;  
-              // mynewpdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);  
-              mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
-              mynewpdf.save("mypdf.pdf");  
-    
-            });
-      $(".paper").show();
-      $(".modalteste").hide();
-      $(".modalteste").empty();
+          //pdf formulario 
+          const myinput = document.getElementById('paperFormPrint');
+            console.log(myinput);
+            html2canvas(myinput,{
+            foreignObjectRendering:false,
+            imageTimeout: 1500,
+            removeContainer:true,
+            })  
+            .then((canvas) => {  
+
+                var imgWidth = 200;  
+                var pageHeight = 290;  
+                var imgHeight = canvas.height * imgWidth / canvas.width;  
+                var heightLeft = imgHeight;  
+                const imgData = canvas.toDataURL('image/png');  
+                const mynewpdf = new jsPDF( 'p','mm','a4');  
+                // const mynewpdf = new jsPDF();  
+                  var position = 0;  
+                  // mynewpdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);  
+                  mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
+                  // mynewpdf.save("mypdf.pdf");  
+                  mynewpdf.save("SegurodeVida.pdf");  
+                  $(".paper").show();
+                  $(".paperprint").hide();
+                  $(".paperprint").empty();
+              });
+
+
+
+        } 
+        else{
+          console.log("NãoValidado");
+        }
+
+      });
 
     });
 
   }
 
   private LoadCamposForm() {
+
     //MASCARAS
     $('.CPF').mask('999.999.999-99');
     $('.Date').mask('00/00/0000');
@@ -379,10 +416,22 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     var cont: number = 0;
     let htmlbenf = '';
     addbenf.addEventListener('click', (e) => {
-      cont = cont + 9090;
-      htmlbenf = this.tableFormulario.htmlTableBeneficiariosReprovadoAvulso(cont);
-      newbenf.insertAdjacentHTML('beforeend', htmlbenf);
-      this.LoadCamposForm();
+
+      let qtdbenfedit = document.querySelectorAll('.itemGlo').length;
+
+      if(qtdbenfedit < 10) { 
+        // console.log("contou" + qtdbenfedit);
+
+        cont = cont + 9090;
+        htmlbenf = this.tableFormulario.htmlTableBeneficiariosReprovadoAvulso(cont);
+        newbenf.insertAdjacentHTML('beforeend', htmlbenf);
+        this.LoadCamposForm();
+
+      }else{
+        // console.log("barrou" + qtdbenfedit);
+        this.modal.ModalCustomAlert('Somente 10 beneficiários são permitidos.');
+      }
+
     });
 
     
@@ -429,24 +478,92 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let BtnFormulario = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
     BtnFormulario.addEventListener('click', (e) => {
 
-      this.ValidaCamposForm(ID);
+        this.ValidarSalvar(ID);
 
+
+      // console.log("testesalvar"+ ID);
+      // this.ValidaCamposForm(ID);
+      // this.ValidaCampoFile();
+      // console.log("botao salvar alterações acionado com o id: "+ ID);
+
+      // this.ValidarSalvar(ID);
+
+
+    });
+
+    //Botao Inputfiles
+    let SetInputFile = (<HTMLInputElement>document.getElementById('InputFileDocs'));
+    SetInputFile.addEventListener('change', (e) => {
+      this.blobEdit();
+      this._eventAttach();
+
+    });
+
+    //Botao Imprimir
+
+    let BtnFormularioPrint = (<HTMLButtonElement>document.getElementById('btnPrintAlteracoes'));
+    BtnFormularioPrint.addEventListener('click', async (e) => {
+      await this.ValidaCamposForm() 
+      .then(async (validaResultado:any) => {
+        if (validaResultado == "Validado") {
+          let FormCanvas = this.formulario.htmlFormPrint();
+          $(".paperprint").append(FormCanvas);
+          $(".paperprint").show();
+          $(".paper").hide();
+          $("#ModalEdicao").hide();
+          
+          //pdf formulario 
+          const myinput = document.getElementById('paperFormPrint');
+            console.log(myinput);
+            html2canvas(myinput,{
+            foreignObjectRendering:false,
+            imageTimeout: 1500,
+            removeContainer:true,
+            })  
+            .then((canvas) => {  
+              var imgWidth = 200;  
+              var pageHeight = 290;  
+              var imgHeight = canvas.height * imgWidth / canvas.width;  
+              var heightLeft = imgHeight;  
+              const imgData = canvas.toDataURL('image/png');  
+              const mynewpdf = new jsPDF( 'p','mm','a4');  
+              // const mynewpdf = new jsPDF();  
+              var position = 0;  
+              // mynewpdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);  
+              mynewpdf.addImage(imgData, 'JPEG', 5, position, imgWidth, imgHeight);  
+              mynewpdf.save("SegurodeVida.pdf");
+              $("#ModalEdicao").show();  
+              $(".paper").show();
+              $(".paperprint").hide();
+              $(".paperprint").empty();
+            });
+
+
+
+          } 
+          else{
+            console.log("NãoValidado");
+          }
+    
+      });
+    
+    
     });
 
     /*INPUT ASSINATURA */
-    let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
-    SignatureBtn.addEventListener('click', (e) => {
+    // let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
+    // SignatureBtn.addEventListener('click', (e) => {
 
-      this.GetAssinatura();
+    //   this.GetAssinatura();
 
-    });
+    // });
 
     /*BTN MODAL */
-    let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
-    BtnCadastrarAssinatura.addEventListener('click', (e) => {
-      this.UploadDadosAssinatura();
+    // let BtnCadastrarAssinatura = (<HTMLButtonElement>document.getElementById('BtnCadastrar'));
+    // BtnCadastrarAssinatura.addEventListener('click', (e) => {
+    //   this.UploadDadosAssinatura();
     
-    });
+    // });
 
     /*BOTAO VOLTAR*/
     let BtnFormularioCancelar = (<HTMLButtonElement>document.getElementById('btnCancelar'));
@@ -461,8 +578,11 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   //SalvarDados
   private async ValidaCamposForm(ID?: number) {
-
+    
+    let validaResultado;
     //SEGURADO
+    let files = (<HTMLInputElement>document.getElementById('InputFileDocs')).files;
+    // let file = files[0];
     let inputNome = (<HTMLInputElement>document.getElementById('inputName')).value;
     let inputCPF = (<HTMLInputElement>document.getElementById('inputCpf')).value;
     let inputDataNascimento = (<HTMLInputElement>document.getElementById('inputData')).value;
@@ -472,7 +592,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let inputEstabelecimento = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
     let inputLotacao = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
     //ESTADO DATA ASSINATURA
-    let SelectEstado = "Estado por Impressão";
+    let SelectEstado = (<HTMLInputElement>document.getElementById('inputEstado')).value;
     let inputDataAss = "@@";
     let BtnAssinatura = "@@";
     //BENEFICIARIOS
@@ -542,8 +662,12 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         
           if(validationPorcentagem != true)
             return console.log("Erro de validação da porcentagem!");
-    
-      //salvar dados       
+        
+            validaResultado = "Validado";
+          return validaResultado ;
+
+          
+      // salvar dados       
       //  if (ID == null || ID == 0 || ID === undefined) 
       //   {
       //       this.Gravar();
@@ -555,6 +679,8 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       //       this.modal.ModalLoad();
       //   }
 
+
+
       } 
       catch (error) {
 
@@ -563,6 +689,69 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       }
 
   }
+
+  private async ValidaCampoFile(){
+    let files = (<HTMLInputElement>document.getElementById('InputFileDocs')).files;
+    let file = files[0];
+
+    try {
+      var ValidaFile = await this.func.ValidaFile(file);
+
+      if (ValidaFile != true) 
+      return console.log("Erro de validação do arquivo.");
+
+      var ValidaCampos = await this.ValidaCamposForm();
+
+      if (ValidaCampos != "Validado") 
+      return console.log("Erro ao validar formulário");
+
+      this.Gravar();
+      this.modal.ModalLoad();
+
+
+  } 
+  catch (error) {
+
+    this.modal.ModalAviso();
+
+  }
+  }
+
+  private async ValidarSalvar(ID?: number) {
+    let files = (<HTMLInputElement>document.getElementById('InputFileDocs')).files;
+    let file = files[0];
+
+    try {
+
+      var ValidaFile = await this.func.ValidaFile(file);
+
+      if (ValidaFile != true) 
+      return console.log("Erro de validação do arquivo.");
+
+      var ValidaCampos = await this.ValidaCamposForm(ID);
+
+      if (ValidaCampos != "Validado") 
+      return console.log("Erro ao validar formulário");
+
+      if (ID == null || ID == 0 || ID === undefined) {
+
+        this.Gravar();
+        this.modal.ModalLoad();
+      } else 
+        {
+            this.Gravar(ID);
+            this.modal.ModalLoad();
+        }
+
+    } 
+  catch (error) {
+
+    this.modal.ModalAviso();
+
+  }
+
+  }
+
   
   private async Gravar(ID?: number) {
 
@@ -576,8 +765,8 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let ValueEstabelecimento = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
     let ValueLotacao = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
     //ESTADO DATA ASSINATURA
-    let ValueEstado = "Estado por impressão";
-    let ValueDataAss = "Assinatura realizada por impressão.";
+    let ValueEstado =  (<HTMLInputElement>document.getElementById('inputEstado')).value;
+    let ValueDataAss = (<HTMLInputElement>document.getElementById('inputDataAss')).value;
     let ValueAssinatura = "Assinatura realizada por impressão.";
     let login = (<HTMLInputElement>document.querySelector('.divNome')).id.split('_')[1];
     const newCadSegurado: ICadSeguradoListItem = <ICadSeguradoListItem>{
@@ -606,6 +795,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     } else {
       await this.CadastraCadSeguradoService.UpdateCadSegurado(newCadSegurado, ID)
         .then(async() => {
+          await this.UpdateAnexos(this.fileInfos, ID);
           return await this.SalvaDadosBeneficiarios(ID);
         });
     }
@@ -617,6 +807,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     const UserName = this.context.pageContext.user.displayName;
     await this.ConsultaCadSeguradoService.getLastBySegurado(UserName)
       .then(async(response: ICadSeguradoListItem) => {
+        await this.SalvaAnexos(this.fileInfos, response.ID);
         return await this.SalvaDadosBeneficiarios(response.ID);
       });
 
@@ -656,114 +847,208 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       this.render();
   }
 
-
-  //ASSINATURA
-  private async UploadDadosAssinatura() {
-    let files = (<HTMLInputElement>document.getElementById('formFile')).files;
-    let file = files[0];
-    var data = new Date();
-    var dia = (data.getDate().toString().length === 2) ? data.getDate() : '0' + data.getDate();                 // 1-31
-    var mes = data.getMonth();                                                                                 // 2 dígitos
-    var ano = data.getFullYear();                                                                               // 4 dígitos
-    var hora = (data.getHours().toString().length === 2) ? data.getHours() : '0' + data.getHours();              // 0-23
-    var min = (data.getMinutes().toString().length === 2) ? data.getMinutes() : '0' + data.getMinutes();        // 0-59
-    var seg = (data.getSeconds().toString().length === 2) ? data.getSeconds() : '0' + data.getSeconds();        // 0-59
-    var str_data = (mes + 1).toString().length === 2 ? (mes + 1) : '0' + (mes + 1) + '-' + dia + '-' + ano;
-    var str_hora = hora + '-' + min + '-' + seg;
-
-    if (file != undefined || file != null) {
-      let spOpts: ISPHttpClientOptions = {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        },
-        body: file,
-      };
-      let web = new Web(this.context.pageContext.web.absoluteUrl);
-      {
-        // large upload
-        web.getFolderByServerRelativeUrl("/sites/DEV/SignatureData/").files.addChunked(str_data + "_" + str_hora + "_" + file.name, file, run => {
-          let myNumber: number = parseInt(((run.currentPointer / run.fileSize) * 100).toString());
-          myNumber.toFixed();
-        }, true)
-          .then(result => {
-
-            console.log(file.name + " upload successfully!");
-
-            let LastId: number;
-            return this.ConsultaAssinaturaService.getLastAssinatura()
-              .then((item: IAssinaturaDigitalListItem) => {
-                LastId = item.ID;
-                return this.UpdateDadosAssinatura(LastId);
-              });
-          });
-      }
-    }
-  }
-  
-  private UpdateDadosAssinatura(LastId: number) {
-
-    var chars = "0123456789" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "!@#$%&";
-    var string_length = 16;
-    var randomstring32 = '';
-
-    for (var i = 0; i < string_length; i++) {
-      var rnum = Math.floor(Math.random() * chars.length);
-      randomstring32 += chars.substring(rnum, rnum + 1);
-    }
+  private async SalvaAnexos(fileInfos, id) {
 
     let web = new Web(this.context.pageContext.web.absoluteUrl);
-
-    let item = web.lists.getByTitle("SignatureData").items.getById(LastId);
-    item.update({
-
-      NomeUsuario: this.context.pageContext.user.displayName,
-      EmailUsuario: this.context.pageContext.user.email,
-      HashCode: randomstring32,
-
-    }).then(r => {
-
-      console.log(" properties updated successfully!");
-      (<HTMLInputElement>document.getElementById('formFile')).value = "";
-      $('#ModalUploadAssinatura').modal('hide');
-      this.modal.ModalSucessoAssinatura();
-
-    });
+    var item = web.lists.getByTitle("CadSegurado").items.getById(id);
+    await item.attachmentFiles.addMultiple(fileInfos)
+      .then((v) => { console.log(v); })
+      .catch((err) => { console.log(err); });
   }
 
-  private GetAssinatura() {
+  private async UpdateAnexos(fileInfos, id: number) {
+    let web = new Web(this.context.pageContext.web.absoluteUrl);
+    var item = await web.lists.getByTitle("CadSegurado").items.getById(id);
 
-    const UserName = this.context.pageContext.user.displayName;
-    const UserEmail = this.context.pageContext.user.email;
+    let files = (<HTMLInputElement>document.getElementById('InputFileDocs')).files;
+    let file = files[0];
+    if(file != undefined || file != null){
+    
+    let attachments = await item.attachmentFiles.get(); 
+    let attachmentNames = attachments.map(a => a.FileName);
+    for (var att = 0; att < attachmentNames.length; att++) {
+      await item.attachmentFiles.deleteMultiple(attachmentNames[att]);
+    }
+    
+    await item.attachmentFiles.addMultiple(fileInfos);
+    
+    }
 
-    this.ConsultaAssinaturaService.getAssinaturas(UserName, UserEmail)
-      .then((Signature: IAssinaturaDigitalListItem[]) => {
-        if (Signature && Signature.length > 0) {
+  }
 
-          let ChrHash: string = Signature[0].HashCode;
-          let NUser: string = Signature[0].NomeUsuario;
+  private blobEdit() {
+    var input = (<HTMLInputElement>document.getElementById('InputFileDocs'));
+    var fileCount = input.files.length;
+    this.fileInfos.splice(0, this.fileInfos.length);
+    let fileInfos = this.fileInfos;
+    fileInfos.splice(0, fileInfos.length);
 
-          this.modal.ModalSignatureTrue(ChrHash, NUser);
+    let anexos = (<HTMLButtonElement>document.getElementById('anexosDivAuxSVP'));
+    if (anexos != null || anexos != undefined) {
+      anexos.remove();
+    }
 
-        } else {
-
-          this.ModalSignatureFalse();
-
-        }
+    let anexosHtml = document.querySelectorAll('.myli');
+    if (anexosHtml != null || anexosHtml != undefined) {
+      anexosHtml.forEach(item => {
+        item.remove();
       });
+    }
+
+    for (var i = 0; i < fileCount; i++) {
+
+      var file = input.files[i];
+      var reader = new FileReader();
+
+      reader.onload = ((file) =>{
+          return (e) =>{
+
+          fileInfos.push({
+            "name": file.name,
+            "content": e.target.result,
+            "id": [i]
+          });
+
+          let children = `${file.name}`;
+          var elemento_pai = (<HTMLElement>document.getElementById('fileList'));
+
+          var div = document.createElement('div');
+          div.classList.add('myli');
+          div.style.marginRight = "5px";
+          div.style.paddingRight = "12px";
+          var texto = document.createTextNode(children);
+          div.appendChild(texto);
+          elemento_pai.appendChild(div);
+        };
+      })(file);
+
+      reader.readAsArrayBuffer(file);
+    }
+
+    require('../../styles/formStyles.css');
+
+    this._eventAttach();
   }
 
-  public async ModalSignatureFalse() {
+  private _eventAttach() {
+    let BtnRemoveItem = document.querySelectorAll('.remove-list');
+    BtnRemoveItem.forEach(item => {
+      item.addEventListener('click', (e) => {
+        item.remove();
+      });
+    });
 
-    const UserName = this.context.pageContext.user.displayName;
-    const UserEmail = this.context.pageContext.user.email;
-
-    let areaname: HTMLElement = document.getElementById('NameModal');
-    areaname.innerHTML = UserName;
-    let areaemail: HTMLElement = document.getElementById('EmailModal');
-    areaemail.innerHTML = UserEmail;
-    $('#ModalUploadAssinatura').modal();
   }
+
+
+
+  //ASSINATURA
+  // private async UploadDadosAssinatura() {
+  //   let files = (<HTMLInputElement>document.getElementById('formFile')).files;
+  //   let file = files[0];
+  //   var data = new Date();
+  //   var dia = (data.getDate().toString().length === 2) ? data.getDate() : '0' + data.getDate();                 // 1-31
+  //   var mes = data.getMonth();                                                                                 // 2 dígitos
+  //   var ano = data.getFullYear();                                                                               // 4 dígitos
+  //   var hora = (data.getHours().toString().length === 2) ? data.getHours() : '0' + data.getHours();              // 0-23
+  //   var min = (data.getMinutes().toString().length === 2) ? data.getMinutes() : '0' + data.getMinutes();        // 0-59
+  //   var seg = (data.getSeconds().toString().length === 2) ? data.getSeconds() : '0' + data.getSeconds();        // 0-59
+  //   var str_data = (mes + 1).toString().length === 2 ? (mes + 1) : '0' + (mes + 1) + '-' + dia + '-' + ano;
+  //   var str_hora = hora + '-' + min + '-' + seg;
+
+  //   if (file != undefined || file != null) {
+  //     let spOpts: ISPHttpClientOptions = {
+  //       headers: {
+  //         "Accept": "application/json",
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: file,
+  //     };
+  //     let web = new Web(this.context.pageContext.web.absoluteUrl);
+  //     {
+  //       // large upload
+  //       web.getFolderByServerRelativeUrl("/sites/DEV/SignatureData/").files.addChunked(str_data + "_" + str_hora + "_" + file.name, file, run => {
+  //         let myNumber: number = parseInt(((run.currentPointer / run.fileSize) * 100).toString());
+  //         myNumber.toFixed();
+  //       }, true)
+  //         .then(result => {
+
+  //           console.log(file.name + " upload successfully!");
+
+  //           let LastId: number;
+  //           return this.ConsultaAssinaturaService.getLastAssinatura()
+  //             .then((item: IAssinaturaDigitalListItem) => {
+  //               LastId = item.ID;
+  //               return this.UpdateDadosAssinatura(LastId);
+  //             });
+  //         });
+  //     }
+  //   }
+  // }
+  
+  // private UpdateDadosAssinatura(LastId: number) {
+
+  //   var chars = "0123456789" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "!@#$%&";
+  //   var string_length = 16;
+  //   var randomstring32 = '';
+
+  //   for (var i = 0; i < string_length; i++) {
+  //     var rnum = Math.floor(Math.random() * chars.length);
+  //     randomstring32 += chars.substring(rnum, rnum + 1);
+  //   }
+
+  //   let web = new Web(this.context.pageContext.web.absoluteUrl);
+
+  //   let item = web.lists.getByTitle("SignatureData").items.getById(LastId);
+  //   item.update({
+
+  //     NomeUsuario: this.context.pageContext.user.displayName,
+  //     EmailUsuario: this.context.pageContext.user.email,
+  //     HashCode: randomstring32,
+
+  //   }).then(r => {
+
+  //     console.log(" properties updated successfully!");
+  //     (<HTMLInputElement>document.getElementById('formFile')).value = "";
+  //     $('#ModalUploadAssinatura').modal('hide');
+  //     this.modal.ModalSucessoAssinatura();
+
+  //   });
+  // }
+
+  // private GetAssinatura() {
+
+  //   const UserName = this.context.pageContext.user.displayName;
+  //   const UserEmail = this.context.pageContext.user.email;
+
+  //   this.ConsultaAssinaturaService.getAssinaturas(UserName, UserEmail)
+  //     .then((Signature: IAssinaturaDigitalListItem[]) => {
+  //       if (Signature && Signature.length > 0) {
+
+  //         let ChrHash: string = Signature[0].HashCode;
+  //         let NUser: string = Signature[0].NomeUsuario;
+
+  //         this.modal.ModalSignatureTrue(ChrHash, NUser);
+
+  //       } else {
+
+  //         this.ModalSignatureFalse();
+
+  //       }
+  //     });
+  // }
+
+  // public async ModalSignatureFalse() {
+
+  //   const UserName = this.context.pageContext.user.displayName;
+  //   const UserEmail = this.context.pageContext.user.email;
+
+  //   let areaname: HTMLElement = document.getElementById('NameModal');
+  //   areaname.innerHTML = UserName;
+  //   let areaemail: HTMLElement = document.getElementById('EmailModal');
+  //   areaemail.innerHTML = UserEmail;
+  //   $('#ModalUploadAssinatura').modal();
+  // }
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');

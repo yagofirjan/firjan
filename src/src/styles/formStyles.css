@@ -159,3 +159,69 @@ body::-webkit-scrollbar {
 .modal-footer {
     border-top: 0px;
 }
+
+#InputFileDocs {
+    width: 100%;
+    border: solid 1px #d0cece;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+#files-area {
+    width: 30%;
+    margin: 0 auto;
+}
+
+.file-block {
+    border-radius: 10px;
+    background-color: rgba(144, 163, 203, 0.2);
+    margin: 5px;
+    color: initial;
+    display: inline-flex;
+
+}
+
+.file-block>span.name {
+    padding-right: 10px;
+    width: max-content;
+    display: inline-flex;
+}
+
+.file-delete {
+    display: flex;
+    width: 24px;
+    color: initial;
+    background-color: #6eb4ff00;
+    font-size: large;
+    justify-content: center;
+    margin-right: 3px;
+    cursor: pointer;
+}
+
+.file-delete:hover {
+    background-color: rgba(144, 163, 203, 0.2);
+    border-radius: 10px;
+}
+
+.file-delete>span {
+    transform: rotate(45deg);
+}
+
+.remove-list {
+    cursor: pointer;
+    padding: 3px 10px 4px 5px;
+    background-color: #dedddd;
+    min-width: 10px;
+    height: 5px;
+    border-radius: 25px;
+    margin-left: 10px;
+}
+
+.myli {
+    background-color: #eceaea;
+    width: fit-content;
+    padding: 4px 2px 5px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin: 5px;
+}

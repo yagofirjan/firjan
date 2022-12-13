@@ -119,22 +119,74 @@ export class FormularioComponent {
                       </li>
                       <li>Concordo e reconheço como válida a anuência aos termos ora acordados em formato eletrônico, ainda que eu não utilize de certificado digital emitido no padrão ICP-Brasil, admitindo-o como válido para todos os fins, nos termos da Medida Provisória nº 2.200-2/2001. Declaro para todos os fins, que esta formalização eletrônica é suficiente para a comprovação da minha autoria, integridade, validade e vinculação ao presente instrumento.</li>
                   </ul>
-              </fieldset>
+              </fieldset
+
+
               <!-- Assinatura -->
+
+              <fieldset>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div>
+                            <label for="inputEstado">Estado</label>
+                            <select id="inputEstado" class="form-control form-control-sm">
+                            <option selected>-</option>
+                            <option>Acre (AC)</option>
+                            <option>Alagoas (AL)</option>
+                            <option>Amapá (AP)</option>
+                            <option>Amazonas (AM)</option>
+                            <option>Bahia (BA)</option>
+                            <option>Ceará (CE)</option>
+                            <option>Distrito Federal (DF)</option>
+                            <option>Espírito Santo (ES)</option>
+                            <option>Goiás (GO)</option>
+                            <option>Maranhão (MA)</option>
+                            <option>Mato Grosso (MT)</option>
+                            <option>Mato Grosso do Sul (MS)</option>
+                            <option>Minas Gerais (MG)</option>
+                            <option>Pará (PA)</option>
+                            <option>Paraíba (PB)</option>
+                            <option>Paraná (PR)</option>
+                            <option>Pernambuco (PE)</option>
+                            <option>Piauí (PI)</option>
+                            <option>Rio de Janeiro (RJ)</option>
+                            <option>Rio Grande do Norte (RN)</option>
+                            <option>Rio Grande do Sul (RS)</option>
+                            <option>Rondônia (RO)</option>
+                            <option>Roraima (RR)</option>
+                            <option>Santa Catarina (SC)</option>
+                            <option>São Paulo (SP)</option>
+                            <option>Sergipe (SE)</option>
+                            <option>Tocantins (TO)</option>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6" id="signature">
+                        <label for="inputDataAss">Data</label>
+                        <input type="text" class="form-control form-control-sm" id="inputDataAss" value="${this.FormtDataAssinatura()}" disabled>
+                    </div>
+                </div>
+            </fieldset>
               
-
-              <label class="ml-label"></label>
-              <p class="dataAss">Rio de Janeiro (RJ), ${this.FormtDataAssinatura()}</p>
-              <div class="dataAss" style="text-align: center;">
-              </div>
-              </br>
-              </br>
-              </br>
-              <hr style="width: 500px;">
-              <p class="nomeAss" style="text-align: center;">Assinatura</p>
-              <table class="dataAss">
-              </table>
-
+              <!-- Upload arquivo assinado -->
+              <fieldset>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <p>
+                                <b>Necessário efetuar o download do formulário, clicando no botão "Imprimir" para assinatura do documento. O mesmo poderá conter a assinatura de próprio punho ou utilizando a assinatura eletrônica do
+                                <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> gov.br <a> através do endereço 
+                                <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> https://www.gov.br/governodigital/pt-br/assinatura-eletronica<a>.</b><br />
+                                <b> Após o documento ter sido assinado clicar no botão "Escolher arquivos" para o upload do documento com a assinatura.</b><br />
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <input type="file" id="InputFileDocs" multiple="multiple"/>
+                            <div id="fileList" class="file-list"></div>
+                        </div>
+                    </div>
+               </fieldset>
 
                 <div class="row">
                     <div class="col-md-4">
@@ -150,7 +202,7 @@ export class FormularioComponent {
           </form>
           </div>
           </div>
-          <div class="modalteste" style="display: none"></div>
+          <div class="paperprint" style="display: none"></div>
 
     `;
 
@@ -173,7 +225,7 @@ export class FormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${cont}">
         </div>
         <div class="form-group col-lg-2 col-md-12" id="inputParentescoBenfSelect${cont}">
-            <label for="inputParentescoBenf${cont}">Parentesco</label>
+            <label for="inputParentescoBenf${cont}">Afinidade</label>
             <select id="inputParentescoBenf${cont}" class="form-control form-control-sm dropdonw">
                         <option>-</option>
                         <option>Avós</option>
@@ -266,7 +318,7 @@ export class FormularioComponent {
             <input type="text" class="Date form-control form-control-sm" id="inputDataBenf${DataDepend.codDependente}" value="${dataNascimento}" disabled>
         </div>
         <div class="form-group col-lg-2 col-md-12" >
-            <label for="inputParentescoBenf${DataDepend.codDependente}">Parentesco</label>
+            <label for="inputParentescoBenf${DataDepend.codDependente}">Afinidade</label>
             ${depend}
         </div>
         <div class="form-group col-lg-2 col-md-12" >
@@ -434,7 +486,8 @@ export class FormularioComponent {
         return AssData;
       }
 
-          //FormPrint
+    
+      //FormPrint
 
     public  htmlFormPrint() {
         //SEGURADO
@@ -442,19 +495,20 @@ export class FormularioComponent {
         let inputCPFValuePrint = (<HTMLInputElement>document.getElementById('inputCpf')).value;
         let inputDataNascimentoValuePrint = (<HTMLInputElement>document.getElementById('inputData')).value;
         let inputMatriculaValuePrint = (<HTMLInputElement>document.getElementById('inputMatricula')).value;
+        let SelectEstadoValuePrint = (<HTMLInputElement>document.getElementById('inputEstado')).value;
+
         //EMPRESA
         let inputEmpresaValuePrint = (<HTMLInputElement>document.getElementById('inputEmpresa')).value;
         let inputEstabelecimentoValuePrint = (<HTMLInputElement>document.getElementById('inputEstabelecimento')).value;
         let inputLotacaoValuePrint = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
 
-        console.log("teste modal");
-        // let ValueNomePrint3 = (<HTMLInputElement>document.getElementById('inputName')).value;
         let contadorPrint = document.querySelectorAll('.itemGlo');
+        // console.log("declararando a variavel: " + contadorPrint);
         var benfhtml = "";
 
         for (var i = 0; i < contadorPrint.length; i++) {
           var id = contadorPrint[i].id.split('_')[1]; 
-        //   let ValueBenfPrint3 = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
+
 
         //Beneficiarios
           let inputNomeBeneficiarioValuePrint = (<HTMLInputElement>document.getElementById('inputNomeBenf' + id)).value;
@@ -480,7 +534,7 @@ export class FormularioComponent {
               <p style="width: 90px;">${inputDataNascimentoBeneficiarioValuePrint}</p>
           </div>
           <div class="benfdivdata">
-              <label>Parentesco</label>
+              <label>Afinidade</label>
               <p style="width: 100px;">${inputParentescoBeneficiarioValuePrint}</p>
           </div>
           <div class="benfdivdata">
@@ -556,7 +610,6 @@ export class FormularioComponent {
                     <div >
                         <!-- conteudo dinamico -->
                         ${benfhtml}
-
                         <!-- conteudo dinamico -->
                     </div>
                 </fieldset>
@@ -606,7 +659,7 @@ export class FormularioComponent {
                 <!-- Assinatura -->
 
                 <label class="ml-label"></label>
-                <p class="dataAss">Rio de Janeiro (RJ), ${this.FormtDataAssinatura()}</p>
+                <p class="dataAss">${SelectEstadoValuePrint}, ${this.FormtDataAssinatura()}</p>
                 <div class="dataAss" style="text-align: center;">
                 </div>
                 </br>
