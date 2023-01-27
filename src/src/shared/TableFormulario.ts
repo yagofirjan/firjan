@@ -354,9 +354,9 @@ export class TableFormularioComponent {
                   <legend>Assinatura</legend>
                   <div class="form-row">
                       <div class="form-group col-md-6">
-                          <div>
+                      <div id="inputOutroEstadoedit">
                               <label for="inputEstado">Estado</label>
-                              <select id="inputEstado" class="form-control form-control-sm"  >
+                              <select id="inputEstado" class="form-control form-control-sm dropdownState"  >
                                   <option selected>-</option>
                                   <option>Acre (AC)</option>
                                   <option>Alagoas (AL)</option>
@@ -385,6 +385,7 @@ export class TableFormularioComponent {
                                   <option>São Paulo (SP)</option>
                                   <option>Sergipe (SE)</option>
                                   <option>Tocantins (TO)</option>
+                                  <option>Outro</option>
                               </select>
                           </div>
                       </div>
@@ -401,7 +402,8 @@ export class TableFormularioComponent {
                       <p>
                           <b>Necessário efetuar o download do formulário, clicando no botão "Imprimir" para assinatura do documento. O mesmo poderá conter a assinatura de próprio punho ou utilizando a assinatura eletrônica do
                           <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> gov.br <a> através do endereço 
-                          <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> https://www.gov.br/governodigital/pt-br/assinatura-eletronica<a>.</b><br />
+                          <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> https://www.gov.br/governodigital/pt-br/assinatura-eletronica<a>.
+                          Para mais informações acesse<a href="https://www.youtube.com/watch?v=dE_hy6sbe9Q" target="_blank"> aqui o vídeo com orientações<a>.</b><br />
                           <b> Após o documento ter sido assinado clicar no botão "Escolher arquivos" para o upload do documento com a assinatura.</b><br />
                       </p>
                   </div>

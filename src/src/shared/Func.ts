@@ -60,7 +60,7 @@ export class Funcomponent {
   }
 
   public async Validation(inputNome: String, inputCPF: String, inputDataNascimento: String, inputMatricula: String,
-    inputEmpresa: String, inputEstabelecimento: String, inputLotacao: String, SelectEstado: String, inputDataAss: String, BtnAssinatura: String ){
+    inputEmpresa: String, inputEstabelecimento: String, inputLotacao: String ){
       
       if(inputNome == "") 
       {
@@ -90,25 +90,25 @@ export class Funcomponent {
       {
         return this.ModalCustom("O preenchimento da Lotação é obrigatório");
       }
-      else if (SelectEstado == "" || SelectEstado == "-")
-      {
-        return this.ModalCustom("O preenchimento do campo Estado é obrigatório.");
-      }
-      else if (inputDataAss == "")
-      {
-        return this.ModalCustom("O preenchimento do campo Data de Assinatura é obrigatório.");
-      }
-      else if (BtnAssinatura == "" || BtnAssinatura == "\n                      ")
-      {
-        return this.ModalCustom("O preenchimento do campo Assinatura é obrigatório.");
-      }
 
       return true;
 
   }
 
-  public async ValidationGrid(inputNomeBeneficiario: String, inputCPFBeneficiario: String, inputDataNascimentoBeneficiario: String, inputTelefoneBaneficiario: String,
-    inputParentescoBeneficiario: String, inputPorcentagem: String ){
+  public async ValidationEstadoDataAss(SelectEstado: String, inputDataAss: String){
+     if (SelectEstado == "" || SelectEstado == "-")
+    {
+      return this.ModalCustom("O preenchimento do campo Estado é obrigatório.");
+    }
+    else if (inputDataAss == "")
+    {
+      return this.ModalCustom("O preenchimento do campo Data de Assinatura é obrigatório.");
+    }
+    return true;
+  }
+
+  public async ValidationGrid(inputNomeBeneficiario: String, inputCPFBeneficiario: String, inputDataNascimentoBeneficiario: String, 
+    inputParentescoBeneficiario: String, inputTelefoneBaneficiario: String, inputPorcentagem: String ){
       
       if(inputNomeBeneficiario == "") 
       {
@@ -121,13 +121,13 @@ export class Funcomponent {
       {
         return this.ModalCustom("O preenchimento do Campo Data de Nascimento do Beneficiário é obrigatório.");
       }
+      else if(inputParentescoBeneficiario == "" || inputParentescoBeneficiario == "-")
+      {
+        return this.ModalCustom("O preenchimento do Campo Afinidade é obrigatório.");
+      }
       else if(inputTelefoneBaneficiario == "")
       {
         return this.ModalCustom("O preenchimento do Campo Telefone do Beneficiário é obrigatório.");
-      }
-      else if(inputParentescoBeneficiario == "")
-      {
-        return this.ModalCustom("O preenchimento do Campo Parentesco é obrigatório.");
       }
       else if (inputPorcentagem == "")
       {

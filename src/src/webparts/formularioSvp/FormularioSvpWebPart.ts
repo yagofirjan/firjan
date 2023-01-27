@@ -231,6 +231,24 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         }
       }
     });
+
+     //Seleciona outro estado
+     let outroEstado = (<HTMLSelectElement>document.getElementById('inputEstado'));
+     outroEstado.addEventListener('change', (e) => {
+       var elemento_pai = document.getElementById('inputOutroEstado');
+       if (outroEstado.value == "Outro") {
+         document.getElementById('inputEstado').remove();
+         var newState = document.createElement('input');
+         newState.type = 'text';
+         newState.placeholder = 'Informe o Estado.';
+         newState.classList.add('dropdownState');
+         newState.classList.add('form-control-sm');
+         newState.classList.add('form-control');
+         newState.classList.add('form-control-sm');
+         newState.setAttribute('id', 'inputEstado');
+         elemento_pai.appendChild(newState);
+       }
+     });
     
     //Clica na lixeira
     let button = document.querySelectorAll('.div_divPai_');
@@ -474,21 +492,31 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
+
     /*INPUT Salvar Alteracao */
     let BtnFormulario = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
     BtnFormulario.addEventListener('click', (e) => {
 
         this.ValidarSalvar(ID);
 
+    });
 
-      // console.log("testesalvar"+ ID);
-      // this.ValidaCamposForm(ID);
-      // this.ValidaCampoFile();
-      // console.log("botao salvar alterações acionado com o id: "+ ID);
-
-      // this.ValidarSalvar(ID);
-
-
+    //Seleciona outro estado alteração
+    let outroEstadoedit = (<HTMLSelectElement>document.getElementById('inputEstado'));
+    outroEstadoedit.addEventListener('change', (e) => {
+      var elemento_paiedit = document.getElementById('inputOutroEstadoedit');
+      if (outroEstadoedit.value == "Outro") {
+        document.getElementById('inputEstado').remove();
+        var newStateedit = document.createElement('input');
+        newStateedit.type = 'text';
+        newStateedit.placeholder = 'Informe o Estado.';
+        newStateedit.classList.add('dropdownState');
+        newStateedit.classList.add('form-control-sm');
+        newStateedit.classList.add('form-control');
+        newStateedit.classList.add('form-control-sm');
+        newStateedit.setAttribute('id', 'inputEstado');
+        elemento_paiedit.appendChild(newStateedit);
+      }
     });
 
     //Botao Inputfiles
@@ -604,7 +632,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
     try {
           var validation = await this.func.Validation(inputNome, inputCPF, inputDataNascimento,
-            inputMatricula, inputEmpresa, inputEstabelecimento, inputLotacao, SelectEstado, inputDataAss, BtnAssinatura);
+            inputMatricula, inputEmpresa, inputEstabelecimento, inputLotacao);
 
           if (validation != true) 
           return console.log("Erro de validação da grid.");
@@ -620,7 +648,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
             let inputPorcentagem = (<HTMLInputElement>document.getElementById('inputPorcentagemBenf' + id)).value;
 
             var validationGrid = await this.func.ValidationGrid(inputNomeBeneficiario, inputCPFBeneficiario, inputDataNascimentoBeneficiario,
-               inputTelefoneBaneficiario, inputParentescoBeneficiario, inputPorcentagem);
+               inputParentescoBeneficiario, inputTelefoneBaneficiario, inputPorcentagem);
 
             if(validationGrid != true)
                return console.log("Erro de validação da grid.");
@@ -662,8 +690,12 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         
           if(validationPorcentagem != true)
             return console.log("Erro de validação da porcentagem!");
+
+          var ValidationEstadoDataAss = await this.func.ValidationEstadoDataAss (SelectEstado, inputDataAss);
+          if (ValidationEstadoDataAss != true) 
+          return console.log("Erro de validação da grid.");
         
-            validaResultado = "Validado";
+          validaResultado = "Validado";
           return validaResultado ;
 
           
@@ -679,8 +711,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       //       this.modal.ModalLoad();
       //   }
 
-
-
       } 
       catch (error) {
 
@@ -695,18 +725,22 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let file = files[0];
 
     try {
-      var ValidaFile = await this.func.ValidaFile(file);
-
-      if (ValidaFile != true) 
-      return console.log("Erro de validação do arquivo.");
-
       var ValidaCampos = await this.ValidaCamposForm();
 
       if (ValidaCampos != "Validado") 
       return console.log("Erro ao validar formulário");
 
+
+      var ValidaFile = await this.func.ValidaFile(file);
+
+      if (ValidaFile != true) 
+      return console.log("Erro de validação do arquivo.");
+
+      
+
       this.Gravar();
       this.modal.ModalLoad();
+      
 
 
   } 
@@ -723,15 +757,15 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
     try {
 
-      var ValidaFile = await this.func.ValidaFile(file);
-
-      if (ValidaFile != true) 
-      return console.log("Erro de validação do arquivo.");
-
       var ValidaCampos = await this.ValidaCamposForm(ID);
 
       if (ValidaCampos != "Validado") 
       return console.log("Erro ao validar formulário");
+
+      var ValidaFile = await this.func.ValidaFile(file);
+
+      if (ValidaFile != true) 
+      return console.log("Erro de validação do arquivo.");
 
       if (ID == null || ID == 0 || ID === undefined) {
 

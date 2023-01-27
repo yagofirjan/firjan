@@ -6,9 +6,10 @@ require('../../node_modules/bootstrap/dist/css/bootstrap.min.css');
 export class ConsultAPIComponent {
   constructor(private siteAbsoluteUrl: string, private client: SPHttpClient) { }
   private host: string = "https://svcdevext.firjan.com.br/recursoshumanos/";
-  private apiDadosColab: string = this.host + "api/v2/colaboradores/me?IncluirEmpresa=true&IncluirEstabelecimento=true&IncluirCargo=true&IncluirLotacao=true&IncluirDocumentacao=true";
+  private apiDadosColab: string = this.host + "api/v2/colaboradores/me?IncluirEmpresa=true&IncluirEstabelecimento=true&IncluirCargo=true&IncluirLotacao=true&IncluirDocumentacao=true&IncluirContato=true";
   private apiDadosBeneficColab: string = this.host + "api/v2/colaboradores/beneficios-ativos/me";
-  private apiDadosDependColab: string = this.host + "api/v2/colaboradores/dependentes-ativos/me";
+  // private apiDadosDependColab: string = this.host + "api/v2/colaboradores/dependentes-ativos/me";
+  private apiDadosDependColab: string = this.host + "api/v2/colaboradores/beneficios-ativos-sem-vinculo-benefic/me";
 
   private apiDadosDependTESTE1: string = this.host + "https://svcdevext.firjan.com.br/recursoshumanos/api/v2/colaboradores/dependentes-ativos?IdEmpresa=1&IdEstabelecimento=1&Matricula=20924";
   private apiDadosDependTESTE2: string = this.host + "https://svcdevext.firjan.com.br/recursoshumanos/api/v2/colaboradores/dependentes-ativos?IdEmpresa=1&IdEstabelecimento=1&Matricula=20924";
