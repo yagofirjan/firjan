@@ -13,6 +13,7 @@ export interface ICadSeguradoListItem {
     Status:string;
     Login:string;
     Motivo:string;
+    MotivoCancelamento: string;
     Author: string;
     Assinatura:string;
 

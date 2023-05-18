@@ -505,7 +505,6 @@ export class FormularioComponent {
         let inputLotacaoValuePrint = (<HTMLInputElement>document.getElementById('inputLotacao')).value;
 
         let contadorPrint = document.querySelectorAll('.itemGlo');
-        // console.log("declararando a variavel: " + contadorPrint);
         var benfhtml = "";
 
         for (var i = 0; i < contadorPrint.length; i++) {

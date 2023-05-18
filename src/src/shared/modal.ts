@@ -73,7 +73,7 @@ export class ModalComponent {
 
     return Swal.fire({
       title: 'Atenção!',
-      text: 'Não é possível realizar uma nova solicitação no momento, confira se há alguma solicitação Pendente de Aprovação ou Rejeitada.',
+      text: 'Não é possível realizar uma nova solicitação no momento, confira se há alguma solicitação Rejeitada ou Pendente.',
       icon: 'warning',
       confirmButtonText: 'OK',
       confirmButtonColor: "#DD6B55"
@@ -167,6 +167,64 @@ export class ModalComponent {
         let SignatureBtn = (<HTMLButtonElement>document.getElementById('ActionAss'));
         SignatureBtn.innerText = `${nome} : ${HashCode}`;
 
+      }
+    });
+  }
+
+  //Cancelamento
+
+  public ModalCancel(){
+    return Swal.fire({
+      title: 'Deseja cancelar esta solicitação ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#28a745',
+      confirmButtonText: 'Sim, desejo cancelar!',
+      cancelButtonText: 'Voltar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        return true;
+     
+      }
+      return false;
+   
+    });
+  }
+
+  public async ModalMotivoCancel(){
+    var motivoCancel = await Swal.fire({
+      input: 'textarea',
+      inputLabel: 'Qual o motivo do cancelamento?',
+      inputPlaceholder: 'Digite aqui o motivo do cancelamento',
+      inputAttributes: {
+        maxlength: '255',
+        minlength: '10',
+      },
+      validationMessage: 'Motivo Obrigatório!',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'Concluir!',
+      cancelButtonText: 'Cancelar!',
+      showCancelButton: true,
+      inputValidator:(motivoCancelamento) =>{
+        if (!motivoCancelamento){
+          return 'Motivo Obrigatório!';
+        }
+      }
+    });
+    return (motivoCancel.value);
+  }
+  
+  public async ModalSucessoCancel() {
+    return Swal.fire({
+      title: 'Solicitação Cancelada!',
+      text: 'Sua solicitação foi cancelada com sucesso.',
+      icon: 'success',
+      confirmButtonText: 'OK',
+      confirmButtonColor: "#32CD32"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        location.reload();
       }
     });
   }

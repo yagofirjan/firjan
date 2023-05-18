@@ -23,6 +23,7 @@ require('jquery-mask-plugin');
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';  
 import html2canvas from 'html2canvas';  
+import { includes } from 'lodash';
 
 
 export interface IFormularioSvpWebPartProps {
@@ -119,7 +120,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     /*BTN DO FORMULARIO */
     let BtnFormulario = (<HTMLButtonElement>document.getElementById('btnSalvar'));
     BtnFormulario.addEventListener('click', (e) => {
-      // console.log("botao salvar acionado");
       this.ValidaCampoFile();
       
     });
@@ -131,16 +131,11 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let htmlbenf = '';
     addbenf.addEventListener('click', (e) => {
       let qtdbenf = document.querySelectorAll('.itemGlo').length;
-      // console.log("testedecontador:  " + qtdbenf);
-
       if(qtdbenf < 10) { 
-        // console.log("contou" + qtdbenf);
         htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
         newbenf.insertAdjacentHTML('beforeend', htmlbenf);
         this.LoadCamposForm();
-
       }else{
-        // console.log("barrou" + qtdbenf);
         this.modal.ModalCustomAlert('Somente 10 beneficiários são permitidos.');
       }
 
@@ -374,6 +369,48 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
           });
         });
     });
+
+    //cancelarsolicitacao
+
+    let ButtonCancel = document.querySelectorAll('.SPVOptionsCancel');
+    ButtonCancel.forEach(item => {
+      item.addEventListener('click', async event => {
+        Swal.showLoading();
+        let idItem = item.id;
+        let CurrentId: number = parseInt(idItem.split('Cancel')[1]);
+
+        let confirma = await this.modal.ModalCancel();
+        if (confirma == true) {
+
+          var motivoCancel = await this.modal.ModalMotivoCancel();
+          if (motivoCancel.length > 0) {
+
+            this.CancelarSolicitacao(CurrentId, motivoCancel);
+
+          }
+        } 
+
+      });
+    });
+
+    //  MotivoCancelamento
+     let BtnOptionsMotivoCancel = document.querySelectorAll('.SPVOptionsMotivoCancel');
+     BtnOptionsMotivoCancel.forEach(item => {
+       item.addEventListener('click', async event => {
+         Swal.showLoading();
+         let idItem = item.id;
+         let CurrentId: number = parseInt(idItem.split('SPVOptionsMotivoCancel')[1]);
+
+         this.ConsultaCadSeguradoService.getCadSegurado(CurrentId)
+           .then(async (Segurado: ICadSeguradoListItem) => {
+             Swal.fire(
+               'Motivo Cancelamento?',
+               '' + Segurado.MotivoCancelamento + '',
+               'info'
+             );
+           });
+       });
+     });
     
   }
 
@@ -383,12 +420,15 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     this.ConsultaCadSeguradoService.getCadSegurado(ID)
     .then((Segurado: ICadSeguradoListItem) => {
 
-      let status = Segurado.Status;
+      let status:any = Segurado.Status;
 
-      if (status === "Pendente") {
+      if (status.includes("Pendente") || status.includes("Cancelado")) {
         htmlFormEditSegurado = this.tableFormulario.htmlTablePopuladoPendente(Segurado, item);
         let btnSalvaAlteracoes = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
         btnSalvaAlteracoes.style.display = "none";
+
+        let btnPrintAlteracoes = (<HTMLButtonElement>document.getElementById('btnPrintAlteracoes'));
+        btnPrintAlteracoes.style.display = "none";
 
       } 
       else {
@@ -438,7 +478,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       let qtdbenfedit = document.querySelectorAll('.itemGlo').length;
 
       if(qtdbenfedit < 10) { 
-        // console.log("contou" + qtdbenfedit);
+
 
         cont = cont + 9090;
         htmlbenf = this.tableFormulario.htmlTableBeneficiariosReprovadoAvulso(cont);
@@ -446,7 +486,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         this.LoadCamposForm();
 
       }else{
-        // console.log("barrou" + qtdbenfedit);
+
         this.modal.ModalCustomAlert('Somente 10 beneficiários são permitidos.');
       }
 
@@ -697,19 +737,6 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
         
           validaResultado = "Validado";
           return validaResultado ;
-
-          
-      // salvar dados       
-      //  if (ID == null || ID == 0 || ID === undefined) 
-      //   {
-      //       this.Gravar();
-      //       this.modal.ModalLoad();
-      //   } 
-      //   else 
-      //   {
-      //       this.Gravar(ID);
-      //       this.modal.ModalLoad();
-      //   }
 
       } 
       catch (error) {
@@ -974,6 +1001,26 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
   }
 
+  //cancelarcolicitacao
+
+  private async CancelarSolicitacao (ID: number, motivoCancel: string){
+    await this.CadastraCadSeguradoService.getCadSegurado(ID)
+    .then (async (Segurado: ICadSeguradoListItem) => {
+      let Status:any = Segurado.Status;
+      if (Status.includes("Pendente")) {
+        const changeCadSegurado: ICadSeguradoListItem = <ICadSeguradoListItem>{
+          Status: "Cancelado",
+          MotivoCancelamento: motivoCancel
+        };
+
+        await this.CadastraCadSeguradoService.UpdateCadSegurado(changeCadSegurado, ID)
+            .then(() => {
+              return this.modal.ModalSucessoCancel();
+
+            });
+      }
+    });
+  }
 
 
   //ASSINATURA

@@ -9,7 +9,7 @@ import { ICadSeguradoListItem } from '../models';
 
 ///_api/web/lists/getbytitle('CadSegurado')/items?$select=ID,Nome,CPF,DataNascimento,Matricula,Empresa,Estabelecimento,Lotacao,Estado,DataAssinatura,Assinatura,Status,Author/ID,Author/Title,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title&$expand=Author/ID,Author/Title,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title
 const LIST_API_ENDPOINT: string = `/_api/web/lists/getbytitle('CadSegurado')`;
-const SELECT_QUERY: string = '$select=ID,Nome,CPF,DataNascimento,Matricula,Empresa,Login,Estabelecimento,Lotacao,Estado,DataAssinatura,Assinatura,Status,Motivo,Author/ID,Author/Title,Attachments,AttachmentFiles,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title&$expand=Author/ID,Author/Title,AttachmentFiles,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title';
+const SELECT_QUERY: string = '$select=ID,Nome,CPF,DataNascimento,Matricula,Empresa,Login,Estabelecimento,Lotacao,Estado,DataAssinatura,Assinatura,Status,Motivo,MotivoCancelamento,Author/ID,Author/Title,Attachments,AttachmentFiles,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title&$expand=Author/ID,Author/Title,AttachmentFiles,AttachmentFiles/ServerRelativeUrl,AttachmentFiles/Title';
 const FILTER_QUERY: string = '&$filter=Author/Title eq ';
 
 
