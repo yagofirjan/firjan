@@ -127,10 +127,11 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     let newbenf = document.getElementById('BenfSec'); //area
     let addbenf = document.getElementById('addbenf');//btn
 
-    var cont: number = 0;
+    let cont: number = 0;
     let htmlbenf = '';
     addbenf.addEventListener('click', (e) => {
       let qtdbenf = document.querySelectorAll('.itemGlo').length;
+      cont = cont + 90;
       if(qtdbenf < 10) { 
         htmlbenf = this.formulario.htmlFormSeguradoAvulso(cont);
         newbenf.insertAdjacentHTML('beforeend', htmlbenf);
@@ -337,8 +338,9 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
   private async LoadEventTable() {
 
     let ButtonEdit = document.querySelectorAll('.EditBtn');
-   await ButtonEdit.forEach(item => {
+    await ButtonEdit.forEach(item => {
       item.addEventListener('click', async event => {
+
         Swal.showLoading();
         let idItem = item.id;
         let CurrentId: number = parseInt(idItem.split('Btn')[1]);
@@ -351,18 +353,21 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       });
     });
 
+
     //Motivo  
+
     let BtnOptionsMotivo = document.querySelectorAll('.SPVOptionsMotivo');
     BtnOptionsMotivo.forEach(item => {
       item.addEventListener('click', async event => {
+
         Swal.showLoading();
         let idItem = item.id;
         let CurrentId: number = parseInt(idItem.split('SPVOptionsMotivo')[1]);
 
-          this.ConsultaCadSeguradoService.getCadSegurado(CurrentId)
+        this.ConsultaCadSeguradoService.getCadSegurado(CurrentId)
             .then(async (Segurado: ICadSeguradoListItem) => {
               Swal.fire(
-                'Motivo Rejeição?',
+                'Motivo Rejeição',
                 ''+Segurado.Motivo+'',
                 'info'
               );
@@ -394,12 +399,12 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     });
 
     //  MotivoCancelamento
-     let BtnOptionsMotivoCancel = document.querySelectorAll('.SPVOptionsMotivoCancel');
+     let BtnOptionsMotivoCancel = document.querySelectorAll('.SPVOptionsCancelMotivo');
      BtnOptionsMotivoCancel.forEach(item => {
        item.addEventListener('click', async event => {
          Swal.showLoading();
          let idItem = item.id;
-         let CurrentId: number = parseInt(idItem.split('SPVOptionsMotivoCancel')[1]);
+         let CurrentId: number = parseInt(idItem.split('SPVOptionsCancelMotivo')[1]);
 
          this.ConsultaCadSeguradoService.getCadSegurado(CurrentId)
            .then(async (Segurado: ICadSeguradoListItem) => {
@@ -422,7 +427,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
 
       let status:any = Segurado.Status;
 
-      if (status.includes("Pendente") || status.includes("Cancelado")) {
+      if (status.includes("Pendente Gap") || status.includes("Cancelado")) {
         htmlFormEditSegurado = this.tableFormulario.htmlTablePopuladoPendente(Segurado, item);
         let btnSalvaAlteracoes = (<HTMLButtonElement>document.getElementById('SalvarAlteracoes'));
         btnSalvaAlteracoes.style.display = "none";
@@ -840,7 +845,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
       Lotacao: ValueLotacao,
       Estado: ValueEstado,
       DataAssinatura: ValueDataAss,
-      Status: "Pendente",
+      Status: "Pendente Gap",
       Motivo:"",
       Assinatura: ValueAssinatura,
       Login: login,
@@ -1007,7 +1012,7 @@ export default class FormularioSvpWebPart extends BaseClientSideWebPart<IFormula
     await this.CadastraCadSeguradoService.getCadSegurado(ID)
     .then (async (Segurado: ICadSeguradoListItem) => {
       let Status:any = Segurado.Status;
-      if (Status.includes("Pendente")) {
+      if (Status.includes("Pendente Gap")) {
         const changeCadSegurado: ICadSeguradoListItem = <ICadSeguradoListItem>{
           Status: "Cancelado",
           MotivoCancelamento: motivoCancel

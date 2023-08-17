@@ -171,7 +171,7 @@ export class TableFormularioComponent {
                   <div class="form-row">
                       <div class="form-group col-md-3">
                           <div>
-                              <label for="inputEstado">Estado</label>
+                              <label for="inputEstado">Local</label>
                               <select id="inputEstado" class="form-control form-control-sm" disabled>
                                   <option selected>${Segurado.Estado}</option>
 
@@ -355,7 +355,7 @@ export class TableFormularioComponent {
                   <div class="form-row">
                       <div class="form-group col-md-6">
                       <div id="inputOutroEstadoedit">
-                              <label for="inputEstado">Estado</label>
+                              <label for="inputEstado">Local</label>
                               <select id="inputEstado" class="form-control form-control-sm dropdownState"  >
                                   <option selected>-</option>
                                   <option>Acre (AC)</option>
@@ -400,7 +400,7 @@ export class TableFormularioComponent {
               <div class="form-row">
                   <div class="form-group col-md-12">
                       <p>
-                          <b>Necessário efetuar o download do formulário, clicando no botão "Imprimir" para assinatura do documento. O mesmo poderá conter a assinatura de próprio punho ou utilizando a assinatura eletrônica do
+                          <b>Necessário efetuar o download do formulário, clicando no botão "Imprimir" para assinatura do documento. O mesmo deverá ser assinado utilizando a assinatura eletrônica do
                           <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> gov.br <a> através do endereço 
                           <a href="https://www.gov.br/governodigital/pt-br/assinatura-eletronica" target="_blank"> https://www.gov.br/governodigital/pt-br/assinatura-eletronica<a>.
                           Para mais informações acesse<a href="https://www.youtube.com/watch?v=dE_hy6sbe9Q" target="_blank"> aqui o vídeo com orientações<a>.</b><br />
@@ -564,7 +564,7 @@ export class TableFormularioComponent {
         let arr: any = item.AttachmentFiles;
         let newarrVR = arr[arr.length - 1];
 
-        if (item.Status == "Pendente") {
+        if (item.Status == "Pendente Gap") {
             pendencia += 1;
             HtmlItensTable += `<tr id="VR${item.ID}">
                               <td class="${styles.tbtd}">${this.Title}</td>
@@ -633,7 +633,7 @@ export class TableFormularioComponent {
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                     </svg>
                                 </button>
-                                <button class="${styles.BtnOptionsMotivoCancel} SPVOptionsMotivoCancel" title="Vizualizar Motivo Cancelamento" id="SPVOptionsMotivoCancel${item.ID}" >     
+                                <button class="${styles.BtnOptionsMotivoCancel} SPVOptionsCancelMotivo" title="Vizualizar Motivo Cancelamento" id="SPVOptionsCancelMotivo${item.ID}" >     
                                 <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-exclamation-square" viewBox="0 0 16 16">
                                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
                                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
@@ -670,7 +670,7 @@ export class TableFormularioComponent {
 
         let pendencia: number = 0;
 
-        if (item.Status == "Pendente" || item.Status == "Reprovado") {
+        if (item.Status == "Pendente Gap" || item.Status == "Reprovado") {
             pendencia += 1;
           }
 
